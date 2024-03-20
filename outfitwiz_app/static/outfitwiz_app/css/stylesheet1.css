@@ -1,0 +1,70 @@
+/* stylesheet.css */
+
+/* Reset default margin and padding */
+* {
+    margin: 0px;
+    padding: 5px;
+}
+
+
+/* Styles for title area */
+.title-area {
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    background-color: #333; /* Background color of hero section */
+    color: #fff; /* Text color */
+    text-align: center;
+}
+
+/* Styles for main content */
+.main-area {
+    /* Add padding or margins as needed */
+    padding: 20px;
+}
+
+
+/* Import Inter font */
+@font-face {
+    font-family: 'Inter';
+    src: url('fonts/Inter-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('fonts/Inter-Medium.ttf') format('truetype');
+    font-weight: 500; /* Medium weight */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('fonts/Inter-ExtraBold.ttf') format('truetype');
+    font-weight: 800; /* Extra Bold weight */
+    font-style: normal;
+}
+
+/* Apply Inter Medium as default font */
+body {
+    font-family: 'Inter', sans-serif; /* Use Inter Medium as default font */
+}
+
+/* Apply Inter Extra Bold at 40px for h1 */
+h1 {
+    font-family: 'Inter', sans-serif; /* Use Inter font family */
+    font-weight: 800; /* Extra Bold weight */
+    /*font-size: 5vw; /* Base font size */
+    font-size: max(5vw, 36px);
+
+}
+
+/* Apply Inter Extra Bold at 24px for h3 */
+h3 {
+    font-family: 'Inter', sans-serif; /* Use Inter font family */
+    font-weight: 800; /* Extra Bold weight */
+    font-size: 24px;
+}
