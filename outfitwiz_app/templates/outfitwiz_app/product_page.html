@@ -1,13 +1,10 @@
 {% extends 'outfitwiz_app/base.html' %}
 
 {% block content %}
-
     <div>
         <h3>Product</h3>
         <p>Our product is very easy to use. There are three steps that you need to follow! You need to 1 Upload a photo of yourself, 2 Upload a photo of the clothing item you want to try on, and 3 Press try on now!</p>
     </div>
-
-
     <div>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -22,15 +19,12 @@
             <button id="try-on-button" type="submit">Try on Now!</button>
         </form>
     </div>
-
     {% if photo1 and photo2 %}
-    <!-- Display this section only if photo1 and photo2 are present -->
-    <div>
-        <h4>Uploaded Photos:</h4>
-        <p>{{photo1}}</p>
-        <p>{{photo2}}</p>
-        <img src="../static/outfitwiz_app/images/man1.jpg">
-    </div>
+        <div>
+            <h4>Uploaded Photos:</h4>
+            <p>{{photo1}}</p>
+            <p>{{photo2}}</p>
+            <img src="../static/outfitwiz_app/images/man1.jpg">
+        </div>
     {% endif %}
-    
 {% endblock %}

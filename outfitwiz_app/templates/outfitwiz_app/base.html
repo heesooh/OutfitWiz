@@ -4,30 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/outfitwiz_app/css/stylesheet1.css">
-    <title>{% block title %}AI Virtual Wardrobe{% endblock %}</title>
-    <!-- Add any additional head elements, styles, or scripts here -->
+    <title>AI Virtual Wardrobe</title>
 </head>
 <body>
     <header>
-        <h1>{% block header %}OutfitWiz{% endblock %}</h1>
-        <!-- Add any common header content here -->
+        <h1>OutfitWiz</h1>
     </header>
-
     <nav>
         <a href="{% url 'home-page' %}">Home</a>
         <a href="{% url 'login-page' %}">Login</a>
         <a href="{% url 'profile-page' %}">Profile</a>
         <a href="{% url 'product-page' %}">Product</a>
-        <!-- Add other navigation links as needed -->
     </nav>
-
     <main>
         {% block content %}{% endblock %}
     </main>
-
-    <footer>
-        <!-- Add common footer content here -->
-    </footer>
-    <!-- Add any additional scripts or other elements at the end of the body if needed -->
 </body>
 </html>
