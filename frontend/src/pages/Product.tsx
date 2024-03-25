@@ -1,37 +1,90 @@
 import { Box } from "@mui/material";
+import pose_img from "../assets/pose.png";
+import clothing_img from "../assets/clothing.png";
 
 const Product = () => {
   // const handleSubmit = async () => {
-    
+
   // };
 
   return (
     <div className="chat-flipIn">
-      <Box
-        sx={{
-          display: "flex",
-          flex: 1,
-          width: "100%",
-          height: "100%",
-          mt: 3,
-          gap: 3,
+      <span
+        style={{
+          fontSize: "50px",
+          fontWeight: "700",
+          display: "block",
+          textAlign: "center",
+          marginTop: "50px",
         }}
       >
-        {/* TODO: Upload Images Here */}
-        <Box sx={{ display: { md: "flex", xs: "flex", sm: "flex" } }}>
-          Upload Images Here
-        </Box>
-        {/* TODO: Display Image Here */}
-        <Box
-          sx={{
-            display: "flex",
-            flex: { md: 1, sx: 1, sm: 1 },
-            flexDirection: "column",
-            px: 3,
-          }}
+        Upload Two Photo
+      </span>
+      <a
+        className="home-card-subscribe-button"
+        href="#"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "15%",
+          margin: "0 auto",
+          marginTop: "40px"
+        }}
+      >
+        Generate
+      </a>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: { md: "row", xs: "column", sm: "column" },
+          gap: 20,
+          my: 5,
+        }}
+      >
+        {/* photo of yourself */}
+        <div
+          className="home-card-container"
+          style={{ backgroundColor: "rgb(248, 237, 232)" }}
         >
-          Display the Generated Image Here
-        </Box>
+          <p className="home-card-title">Photo - Yourself</p>
+          <img
+            src={pose_img}
+            alt="defalt pose image"
+            width="250"
+            height="320"
+          />
+          <a
+            className="home-card-subscribe-button"
+            href="#"
+            style={{ fontSize: "27px", width: "50%" }}
+          >
+            Upload
+          </a>
+        </div>
+        {/* photo of clothing */}
+        <div
+          className="home-card-container"
+          style={{ backgroundColor: "rgb(248, 237, 232)" }}
+        >
+          <p className="home-card-title">Photo - The Clothing Item</p>
+          <img
+            src={clothing_img}
+            alt="defalt pose image"
+            width="250"
+            height="320"
+          />
+          <a
+            className="home-card-subscribe-button"
+            href="#"
+            style={{ fontSize: "27px", width: "50%" }}
+          >
+            Upload
+          </a>
+        </div>
       </Box>
     </div>
   );
