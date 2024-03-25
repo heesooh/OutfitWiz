@@ -18,7 +18,7 @@ const Product = () => {
           marginTop: "50px",
         }}
       >
-        Upload Two Photo
+        Upload Two Photos
       </span>
       <a
         className="home-card-subscribe-button"
