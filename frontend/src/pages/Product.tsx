@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import pose_img from "../assets/pose.png";
 import clothing_img from "../assets/clothing.png";
+import defaultGeneratedImg from "../assets/mockImg.png";
 import { useState } from "react";
 import { getImage } from '../helpers/api-communicators';
 
@@ -8,8 +9,8 @@ const Product = () => {
   const [imageData, setImageData] = useState("");
 
   const setTestImage = () => {
-    const testImageUrl = '/Users/hanna/Desktop/IMG_7977.JPG'; 
-    setImageData(testImageUrl);
+    // const testImageUrl = '/Users/hanna/Desktop/IMG_7977.JPG'; 
+    setImageData(defaultGeneratedImg);
   };
 
   const handleGenerate = async () => {
@@ -39,21 +40,6 @@ const Product = () => {
       >
         Upload Two Photos
       </span>
-      <a
-        className="home-card-subscribe-button"
-        href="#"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "15%",
-          margin: "0 auto",
-          marginTop: "40px",
-        }}
-        onClick={handleGenerate}
-      >
-        Generate
-      </a>
       <Box
         sx={{
           width: "100%",
@@ -106,7 +92,32 @@ const Product = () => {
           </a>
         </div>
       </Box>
-      {imageData && <img src={imageData} alt="Generated AI Image" />}
+      <a
+        className="home-card-subscribe-button"
+        href="#"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "15%",
+          margin: "0 auto",
+          marginTop: "40px",
+        }}
+        onClick={handleGenerate}
+      >
+        Generate
+      </a>
+      <Box sx={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        mt: "50px",
+        mb: "50px",
+      }}>
+        {imageData && <img src={imageData} alt="Generated AI Image" />}
+      </Box>
+      
     </div>
   );
 };
