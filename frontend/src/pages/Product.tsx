@@ -2,14 +2,17 @@ import { Box } from "@mui/material";
 import defaultPersonImg from "../assets/pose.png";
 import defaultClothingImg from "../assets/clothing.png";
 import { useState, useEffect } from "react";
+import defaultGeneratedImg from "../assets/mockImg.png";
+import { getImage } from '../helpers/api-communicators';
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
   const [clothingImg, setClothingImg] = useState<string | null>(null);
   const [AIImage, setAIImage] = useState<File | null>(null);
-
-  const handleSubmit = async () => {
-
+  const [imageData, setImageData] = useState("");
+  
+  const setTestImage = () => {
+    setImageData(defaultGeneratedImg);
   };
 
   const handleImageUpload = (
@@ -24,6 +27,20 @@ const Product = () => {
         setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      //const data = await getImage();
+      //setImageData(data);
+      setTestImage();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
     }
   };
 
@@ -111,11 +128,22 @@ const Product = () => {
           alignItems: "center",
           width: "15%",
           margin: "0 auto",
-          marginTop: "40px"
+          marginTop: "40px",
         }}
+        onClick={handleSubmit}
       >
         Generate
       </a>
+      <Box sx={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        mt: "50px",
+        mb: "50px",
+      }}>
+        {imageData && <img src={imageData} alt="Generated AI Image" />}
+      </Box>
     </div>
   );
 };
