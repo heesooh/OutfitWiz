@@ -1,11 +1,30 @@
 import { Box } from "@mui/material";
 import pose_img from "../assets/pose.png";
 import clothing_img from "../assets/clothing.png";
+import { useState } from "react";
+import { getImage } from '../helpers/api-communicators';
 
 const Product = () => {
-  // const handleSubmit = async () => {
+  const [imageData, setImageData] = useState("");
 
-  // };
+  const setTestImage = () => {
+    const testImageUrl = '/Users/hanna/Desktop/IMG_7977.JPG'; 
+    setImageData(testImageUrl);
+  };
+
+  const handleGenerate = async () => {
+    try {
+      //const data = await getImage();
+      //setImageData(data);
+      setTestImage();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
+    }
+  };
 
   return (
     <div className="chat-flipIn">
@@ -29,8 +48,9 @@ const Product = () => {
           alignItems: "center",
           width: "15%",
           margin: "0 auto",
-          marginTop: "40px"
+          marginTop: "40px",
         }}
+        onClick={handleGenerate}
       >
         Generate
       </a>
@@ -86,6 +106,7 @@ const Product = () => {
           </a>
         </div>
       </Box>
+      {imageData && <img src={imageData} alt="Generated AI Image" />}
     </div>
   );
 };
