@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/outfitwiz_app/css/stylesheet1.css">
+    <title>AI Virtual Wardrobe</title>
+</head>
+<body>
+    <header>
+        <h1>OutfitWiz</h1>
+    </header>
+    <nav>
+        <a href="{% url 'home-page' %}">Home</a>
+        <a href="{% url 'login-page' %}">Login</a>
+        <a href="{% url 'profile-page' %}">Profile</a>
+        <a href="{% url 'product-page' %}">Product</a>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
