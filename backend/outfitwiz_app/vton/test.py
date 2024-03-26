@@ -23,7 +23,7 @@ def get_opt():
 
     parser.add_argument('--dataset_dir', type=str, default='./outfitwiz_app/vton/datasets/')
     parser.add_argument('--dataset_mode', type=str, default='test')
-    parser.add_argument('--dataset_list', type=str, default='test_pairs.txt')
+    parser.add_argument('--dataset_list', type=str, default='test_pairs_dynamic.txt')
     parser.add_argument('--checkpoint_dir', type=str, default='./outfitwiz_app/vton/checkpoints/')
     parser.add_argument('--save_dir', type=str, default='./outfitwiz_app/vton/results/')
 

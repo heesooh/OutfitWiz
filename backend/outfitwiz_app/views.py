@@ -63,10 +63,11 @@ class ProductPageView(View):
             print("Uploaded photo 1:", photo1.name)
             print("Uploaded photo 2:", photo2.name)
 
-            asyncio.run(MLManager.perform_prediction())
-
-            # Redirect to the same page to avoid form resubmission on page refresh
-            return render(request, self.template_name, {'photo1': photo1.name, 'photo2': photo2.name})
+            photo3_dir = asyncio.run(MLManager.perform_prediction(photo1.name, photo2.name))
+##
+            # Redirect to the same page to avoid form resubmission on page refreshv /static/outfitwiz_app/images/man1.jpg'
+            
+            return render(request, self.template_name, {'photo1_dir': '../static/' + photo1.name, 'photo2_dir': '../static/' + photo2.name,  'photo3_dir': '../static/' + photo3_dir})
         else:
             # If photos were not uploaded, re-render the page
             return HttpResponseRedirect(request.path_info)

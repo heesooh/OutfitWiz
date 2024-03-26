@@ -123,6 +123,9 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '..', 'outfitwiz_app', 'static'),
+    os.path.join(BASE_DIR, '..', 'outfitwiz_app', 'vton', 'results', 'demo'),
+    os.path.join(BASE_DIR, '..', 'outfitwiz_app', 'vton', 'datasets', 'test', 'cloth'),
+    os.path.join(BASE_DIR, '..', 'outfitwiz_app', 'vton', 'datasets', 'test', 'image')
 ]
 
 

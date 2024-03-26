@@ -25,6 +25,12 @@
     padding: 20px;
 }
 
+.image-container {
+    max-width: 200px;  /* Limit the width to 300 pixels */
+    width: auto;       /* Allow the image to scale proportionally */
+    height: auto;      /* Allow the image to scale proportionally */
+}
+
 
 /* Import Inter font */
 @font-face {

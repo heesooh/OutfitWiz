@@ -9,22 +9,24 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="drop-target">
-                <p>Drag and drop a photo here</p>
+                <p>Upload a photo of yourself</p>
                 <input type="file" name="photo1" accept="image/*">
             </div>
             <div class="drop-target">
-                <p>Drag and drop another photo here</p>
+                <p>Upload a photo of a piece of clothing</p>
                 <input type="file" name="photo2" accept="image/*">
             </div>
             <button id="try-on-button" type="submit">Try on Now!</button>
         </form>
     </div>
-    {% if photo1 and photo2 %}
+    {% if photo1_dir and photo2_dir %}
         <div>
-            <h4>Uploaded Photos:</h4>
-            <p>{{photo1}}</p>
-            <p>{{photo2}}</p>
-            <img src="../static/outfitwiz_app/images/man1.jpg">
+            <h4>Uploaded Person Image:</h4>
+            <img class="image-container" src={{photo1_dir}}>
+            <h4>Uploaded Clothing Image:</h4>
+            <img class="image-container" src={{photo2_dir}}>
+            <h4>New Image:</h4>
+            <img class="image-container" src={{photo3_dir}}>
         </div>
     {% endif %}
 {% endblock %}
