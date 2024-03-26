@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from outfitwiz_app.managers.ml_manager import MLManager
+import asyncio
 
 
 class HomePageView(View):
@@ -62,7 +63,7 @@ class ProductPageView(View):
             print("Uploaded photo 1:", photo1.name)
             print("Uploaded photo 2:", photo2.name)
 
-            MLManager.perform_prediction()
+            asyncio.run(MLManager.perform_prediction())
 
             # Redirect to the same page to avoid form resubmission on page refresh
             return render(request, self.template_name, {'photo1': photo1.name, 'photo2': photo2.name})
