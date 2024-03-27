@@ -7,12 +7,14 @@ from iglovikov_helper_functions.utils.image_utils import load_rgb, pad, unpad
 from iglovikov_helper_functions.dl.pytorch.utils import tensor_from_rgb_image
 from cloths_segmentation.pre_trained_models import create_model
 import warnings
+import os
+
 warnings.filterwarnings("ignore")
 
-def process_cloth_image(image_path, save_path_mask):
+def process_cloth_image(cloth_image_path):
     model = create_model("Unet_2020-10-30")
     model.eval()
-    image = load_rgb(image_path)
+    image = load_rgb(cloth_image_path)
 
     transform = albu.Compose([albu.Normalize(p=1)], p=1)
 
@@ -27,10 +29,10 @@ def process_cloth_image(image_path, save_path_mask):
     mask = (prediction > 0).cpu().numpy().astype(np.uint8)
     mask = unpad(mask, pads)
 
-    img = np.full((1024,768,3), 255)
-    seg_img = np.full((1024,768), 0)
+    img = np.full((1024, 768, 3), 255)
+    seg_img = np.full((1024, 768), 0)
 
-    b = cv2.imread(image_path)
+    b = cv2.imread(cloth_image_path)
     b_img = mask * 255
 
     if b.shape[1] <= 600 and b.shape[0] <= 500:
@@ -41,8 +43,9 @@ def process_cloth_image(image_path, save_path_mask):
     img[int((1024 - shape[0]) / 2): 1024 - int((1024 - shape[0]) / 2), int((768 - shape[1]) / 2):768 - int((768 - shape[1]) / 2)] = b
     seg_img[int((1024 - shape[0]) / 2): 1024 - int((1024 - shape[0]) / 2), int((768 - shape[1]) / 2):768 - int((768 - shape[1]) / 2)] = b_img
 
-    cv2.imwrite(save_path_mask, seg_img)
+    # Derive save path from cloth_image_path
+    base_dir = './outfitwiz_app/vton/datasets/test/cloth-mask/'
+    file_name = os.path.basename(cloth_image_path)
+    save_path_mask = os.path.join(base_dir, file_name)
 
-# Use the function for the specified files
-process_cloth_image('/home/rzhyang/Desktop/repos/OutfitWiz/backend/outfitwiz_app/vton/datasets/test/cloth/test.jpg', 
-                    '/home/rzhyang/Desktop/repos/OutfitWiz/backend/outfitwiz_app/vton/datasets/test/cloth-mask/test.jpg')
+    cv2.imwrite(save_path_mask, seg_img)
