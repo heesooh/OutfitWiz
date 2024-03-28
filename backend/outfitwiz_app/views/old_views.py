@@ -86,9 +86,6 @@ class ProductPageView(View):
             # If photos were not uploaded, re-render the page
             return HttpResponseRedirect(request.path_info)
     
-class PingView(View):
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({'status': 'Server running'})
 
 class StylePageView(View):
     template_name = './outfitwiz_app/style_page.html'

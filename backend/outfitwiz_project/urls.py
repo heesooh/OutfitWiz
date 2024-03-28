@@ -17,13 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView
-from outfitwiz_app.views import HomePageView, LoginPageView, ProfilePageView, PingView, StylePageView, ProductPageView, LogoutView
+from outfitwiz_app.views.old_views import HomePageView, LoginPageView, ProfilePageView, StylePageView, ProductPageView, LogoutView
+from outfitwiz_app.views.api_views import MakePredictionAPIView, GetCSRFCookieView, PingView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/home/', permanent=False)),
     path('admin/', admin.site.urls),
     path('ping/', PingView.as_view(), name='ping-page'),
-    # re_path(r'^.*/$', RedirectView.as_view(url='home/', permanent=False)), !!! Not working 
+
+    # API Views
+    path('make-prediction', MakePredictionAPIView.as_view(), name='make-prediction'),
+    path('get-cookie', GetCSRFCookieView.as_view(), name='get-cookie'),
+
+    #Old Views:
+
     path('home/', HomePageView.as_view(), name="home-page"),
     path('accounts/profile/', ProfilePageView.as_view(), name="profile-page"),
     path('accounts/login/', LoginPageView.as_view(), name='login-page'),
