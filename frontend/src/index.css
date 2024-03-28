@@ -145,20 +145,45 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
+  color: white;
+  position: relative;
 
   width: 100%;
-  height: 800px;
+  height: calc(100vh - 50px);
+}
+
+.home-top-background {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.home-top-background img {
+  object-fit: cover;
+}
+
+.home-top-background-image {
+  width: 100%;
+  height: 100%;
 }
 
 .home-top-text {
-  width: 30%;
+  width: 100%;
   min-width: 500px;
+  height: calc(100% - 100px);
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 50px;
+  background-color: #72727291;
+}
+
+.home-top-text-title {
+  font-size: 120px; 
+  font-weight: 700; 
+  display: flex;
 }
 
 .home-top-btn-scene {
@@ -299,3 +324,4 @@ body {
   right: -10px;
   top: 55%;
 }
+

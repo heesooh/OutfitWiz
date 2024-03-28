@@ -4,19 +4,33 @@ import "animate.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const handleGetStarted = async () => {
+  const handleGetStarted = () => {
     navigate("/product");
   };
 
   return (
     <div>
-      <div className="animate__animated animate__backInDown home-top">
+      <div className="home-top">
         <div className="home-top-text">
-          <span style={{ fontSize: "100px", fontWeight: "700" }}>
-            OutfitWiz
-          </span>
-          <span style={{ fontSize: "30px", fontWeight: "600" }}>
-            AI powered virtual wardrobe!
+          <div className="home-top-text-title">
+            <div
+              className="animate__animated animate__fadeInLeft"
+              style={{ color: "black" }}
+            >
+              Outfit
+            </div>
+            <div
+              className="animate__animated animate__fadeInRight"
+              style={{ color: "white" }}
+            >
+              Wiz
+            </div>
+          </div>
+          <span
+            className="animate__animated animate__fadeInUp"
+            style={{ fontSize: "30px", fontWeight: "600" }}
+          >
+            AI Powered Virtual Wardrobe
           </span>
           <div className="home-top-btn-scene" style={{ marginTop: "50px" }}>
             <div className="home-top-btn-cube">
@@ -29,6 +43,13 @@ const Home = () => {
               <span className="home-top-btn-side front">Hover Here</span>
             </div>
           </div>
+        </div>
+        <div className="home-top-background">
+          <img
+            src="home/background.jpg"
+            alt="Home Background"
+            className="home-top-background-image"
+          />
         </div>
       </div>
       <div className="home-center">
@@ -58,7 +79,6 @@ const Home = () => {
             my: 10,
           }}
         >
-          {/* Free Plan */}
           <div className="home-card-container">
             <p className="home-card-title">Free Plan</p>
             <p className="home-card-price">
@@ -75,15 +95,14 @@ const Home = () => {
               <div className="home-card-ribbon">Beginner's Choice</div>
             </div>
           </div>
-          {/* Premium Plan */}
           <div className="home-card-container">
             <p className="home-card-title">Premium Plan</p>
             <p className="home-card-price">
               $4.99<span>/month</span>
             </p>
             <p className="home-card-description">
-              Best value plan. Access to unlimited virtual fitting. Faster response speed and
-              flexible customization!
+              Best value plan. Access to unlimited virtual fitting. Faster
+              response speed and flexible customization!
             </p>
             <b className="home-card-offer">
               Act fast! Offer ends on October 20th, 2024.
@@ -95,14 +114,14 @@ const Home = () => {
               <div className="home-card-ribbon">Best Value</div>
             </div>
           </div>
-          {/* Business Plan */}
           <div className="home-card-container">
             <p className="home-card-title">Business Plan</p>
             <p className="home-card-price">
               $159.99<span>/month</span>
             </p>
             <p className="home-card-description">
-              Business oriented. Unlimited virtual fitting and additional features!
+              Business oriented. Unlimited virtual fitting and additional
+              features!
             </p>
             <b className="home-card-offer">
               Act fast! Offer ends on October 20th, 2024.
