@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "OutfitWiz Extension",
+    "version": "1.0.0",
+    "description": "This is an extension to allow users to quickly try on online clothing virtually.",
+    "author": "Heesoo Hwang",
+    "permissions": ["activeTab"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_title": "OutfitWiz Extension",
+      "default_icon": {
+        "16": "images/icon.png",
+        "48": "images/icon.png",
+        "128": "images/icon.png"
+      }
+    },
+    "icons": {
+        "16": "images/icon.png",
+        "48": "images/icon.png",
+        "128": "images/icon.png"
+      }
+  }
+  
