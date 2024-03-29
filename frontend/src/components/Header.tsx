@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <AppBar
       sx={{ 
-        bgcolor: "transparent", 
+        bgcolor: "white", 
         position: "static", 
         boxShadow: "none",
         display: "flex", 
