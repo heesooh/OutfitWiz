@@ -1,14 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import CustomizedInput from "../components/shared/CustomizedInput";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //   event.preventDefault();
-    //   const formData = new FormData(event.currentTarget);
-    //   const name = formData.get("name") as string;
-    //   const email = formData.get("email") as string;
-    //   const password = formData.get("password") as string;
-    // };
+    const navigate = useNavigate();
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      // const formData = new FormData(event.currentTarget);
+      // const name = formData.get("name") as string;
+      // const email = formData.get("email") as string;
+      // const password = formData.get("password") as string;
+      navigate("/upload");
+    };
 
   return (
     <div className="slide-top">
@@ -30,7 +33,7 @@ const Signup = () => {
             }}></div>
             <div className="wave"></div>
             <form
-              // onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
               style={{
                 position: "absolute",
               }}
