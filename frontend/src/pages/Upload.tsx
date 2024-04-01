@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import exampleImage from "../assets/pose.png";
 import Loading from "../components/shared/Loading";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,11 @@ const Upload = () => {
   const navigate = useNavigate();
   const [defaultImage, setDefaultImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const hiddenPhotoInput = useRef<HTMLInputElement>(null);
+
+  const handlePhotoUploadClick = () => {
+    hiddenPhotoInput.current?.click();
+  };
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -24,6 +29,19 @@ const Upload = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    const topDownObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("top-down-show");
+        }
+      });
+    });
+    const hiddenYElements = document.querySelectorAll(".top-down-hidden");
+    hiddenYElements.forEach((element) => topDownObserver.observe(element));
+  }, []);
+
 
   const handleSubmit = async () => {
     try {
@@ -51,11 +69,7 @@ const Upload = () => {
 
   return (
     <div className="chat-flipIn">
-      {loading? (
-        <Loading/>
-      ) : (
-        <></>
-      )}
+      {loading ? <Loading /> : <></>}
       <span
         style={{
           fontSize: "50px",
@@ -79,17 +93,12 @@ const Upload = () => {
         }}
       >
         <div
-          className="home-card-container"
+          className="home-card-container top-down-hidden"
           style={{ backgroundColor: "rgb(248, 237, 232)" }}
         >
           <p className="home-card-title">Photo - Yourself</p>
           {defaultImage ? (
-            <img
-              src={defaultImage}
-              alt="Yourself"
-              width="250"
-              height="320"
-            />
+            <img src={defaultImage} alt="Yourself" width="250" height="320" />
           ) : (
             <img
               src={exampleImage}
@@ -98,14 +107,24 @@ const Upload = () => {
               height="320"
             />
           )}
-          <form onSubmit={handleSubmit}>
-            <input type="file" onChange={(e) => handleImageUpload(e, setDefaultImage)} />
+          <button
+            className="log-btn"
+            type="submit"
+            onClick={handlePhotoUploadClick}
+          >
+            <i className="animation"></i>Upload<i className="animation"></i>
+          </button>
+          <form>
+            <input
+              type="file"
+              ref={hiddenPhotoInput}
+              style={{ display: "none" }}
+              onChange={(e) => handleImageUpload(e, setDefaultImage)}
+            />
           </form>
         </div>
       </Box>
-      <a
-        className="home-card-subscribe-button"
-        href="#"
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -114,10 +133,11 @@ const Upload = () => {
           margin: "0 auto",
           marginTop: "40px",
         }}
-        onClick={handleSubmit}
       >
-        NEXT
-      </a>
+        <button className="log-btn" type="submit" onClick={handleSubmit}>
+          <i className="animation"></i>NEXT<i className="animation"></i>
+        </button>
+      </div>
     </div>
   );
 };
