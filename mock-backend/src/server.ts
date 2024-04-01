@@ -24,7 +24,7 @@ app.get('/get-cookie', csrfProtection, (req, res) => {
 });
 
 // POST route that requires CSRF token validation
-app.post('/make-prediction', (req, res) => {
+app.post('/make-prediction', csrfProtection, (req, res) => {
   // Your business logic here. If this code runs, CSRF token is valid.
   const {photo_person_name, photo_clothing_name, photo_person, photo_clothing} = req.body;
   console.log(`get request: photo_person_name: ${photo_person_name} photo_clothing_name: ${photo_clothing_name}`)

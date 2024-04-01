@@ -45,17 +45,14 @@ const Product = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await getToken();
-      const token = data.csrfToken;
-      console.log("token", token);
+      await getToken();
       const body = {
         photo_person_name: 'person.png',
         photo_clothing_name: 'clothing.png',
         photo_person: personImg,
         photo_clothing: clothingImg
       }
-      const reponseImage = await uploadImage(token, body);
-      console.log(reponseImage);
+      const reponseImage = await uploadImage(body);
       setImageData(reponseImage.photo_prediction);
     } catch (error) {
       if (error instanceof Error) {

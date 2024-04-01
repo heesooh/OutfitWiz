@@ -36,11 +36,11 @@ export const checkAuthStatus = async () => {
   return data;
 };
 
-export const uploadImage = async (token:String, data:any) => {
+export const uploadImage = async (data:any) => {
   const response = await axios.post("/make-prediction", {
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-Token': token
+      'X-CSRF-Token': "xxx"
     },
   data
   });
@@ -56,6 +56,5 @@ export const getToken = async () => {
   if (response.status !== 200) {
     throw new Error("Failed to get cookie");
   }
-  const data = response.data;
-  return data;
+  axios.defaults.headers.post['X-CSRF-Token'] = response.data.csrfToken;
 };
