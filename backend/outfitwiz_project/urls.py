@@ -26,11 +26,11 @@ urlpatterns = [
     path('ping/', PingView.as_view(), name='ping-page'),
 
     # API Views
-    path('make-prediction', MakePredictionAPIView.as_view(), name='make_prediction'),
-    path('get-source-images', GetSourceImages.as_view(), name='get_cookie'),
-    path('get-cookie', GetCSRFCookieView.as_view(), name='get_cookie'),
-    path('login/', LoginAPIView.as_view(), name='login'),
-    path('signup/', SignUpAPIView.as_view(), name='signup'),
+    path('api/make-prediction', MakePredictionAPIView.as_view(), name='make_prediction'),
+    path('api/get-source-images', GetSourceImages.as_view(), name='get_cookie'),
+    path('api/get-cookie', GetCSRFCookieView.as_view(), name='get_cookie'),
+    path('api/login', LoginAPIView.as_view(), name='login'),
+    path('api/signup', SignUpAPIView.as_view(), name='signup'),
 
     #Old Views:
 
