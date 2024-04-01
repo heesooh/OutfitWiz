@@ -3,7 +3,7 @@ import defaultPersonImg from "../assets/pose.png";
 import defaultClothingImg from "../assets/clothing.png";
 import { useState, useEffect, useRef } from "react";
 import defaultGeneratedImg from "../assets/mockImg.png";
-import { getImage } from "../helpers/api-communicators";
+import { getToken, uploadImage } from "../helpers/api-communicators";
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
@@ -14,7 +14,9 @@ const Product = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
-    handleSubmit();
+    if (!isModalOpen) {
+          handleSubmit();
+    }
     setIsModalOpen(!isModalOpen);
   };
 
@@ -43,10 +45,18 @@ const Product = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await getImage();
-      if (data != null) {
-        setImageData(data);
+      const data = await getToken();
+      const token = data.csrfToken;
+      console.log("token", token);
+      const body = {
+        photo_person_name: 'person.png',
+        photo_clothing_name: 'clothing.png',
+        photo_person: personImg,
+        photo_clothing: clothingImg
       }
+      const reponseImage = await uploadImage(token, body);
+      console.log(reponseImage);
+      setImageData(reponseImage.photo_prediction);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -82,7 +92,7 @@ const Product = () => {
     >
       <p className="home-card-title">Generated Image</p>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <img src={imageData} alt="Generated AI Image" width="250" height="320" />
+      <img src={`data:image/jpeg;base64,${imageData}`} alt="Generated AI Image" width="250" height="320" />
       <button
         className="log-btn"
         type="submit"
