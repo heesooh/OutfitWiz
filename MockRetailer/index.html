@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Retailer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Mock Retailer</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="product-list">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <div class="product">
+                <img src="images/11791_00.jpg" alt="Product Image">
+                <h3>Product Title</h3>
+                <p class="price">$99.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+                <div id="tryOnNowButtonContainer">
+                    <button class="try-on-now" onclick="tryOnNow()">Try on Now</button>
+                </div>
+            </div>
+            <div class="product">
+                <img src="images/02783_00.jpg" alt="Product Image">
+                <h3>Product Title</h3>
+                <p class="price">$79.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+                <div id="tryOnNowButtonContainer">
+                    <button class="try-on-now" onclick="tryOnNow()">Try on Now</button>
+                </div>
+            </div>
+            <div class="product">
+                <img src="images/11028_00.jpg" alt="Product Image">
+                <h3>Product Title</h3>
+                <p class="price">$129.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+                <div id="tryOnNowButtonContainer">
+                    <button class="try-on-now" onclick="tryOnNow()">Try on Now</button>
+                </div>
+            </div>
+            <!-- Repeat this product block for multiple products -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mock Retailer. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        function tryOnNow() {
+            var currentUrl = window.location.href;
+            var getRequestUrl = 'http://127.0.0.1:8000/get-source-images?source_url=' + encodeURIComponent(currentUrl);
+            window.open(getRequestUrl, '_blank'); // Open in a new tab
+        }
+    </script>
+</body>
+</html>

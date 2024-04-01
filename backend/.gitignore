@@ -1,2 +1,4 @@
 # Ignore general __pycache__ directories
 **/__pycache__/
+
+db.sqlite3

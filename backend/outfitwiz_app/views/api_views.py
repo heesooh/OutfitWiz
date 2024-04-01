@@ -2,16 +2,25 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 import base64
 import cv2
 import os
+import jwt
 from outfitwiz_app.vton.cloth_mask import process_cloth_image
 import asyncio
 from outfitwiz_app.managers.ml_manager import MLManager
+from outfitwiz_app.managers.web_manager import WebManager
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
+from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+from outfitwiz_app.models import OutfitWizCustomer
 
 
 # Import any other necessary modules
@@ -57,3 +66,48 @@ class MakePredictionAPIView(View):
         else:
             # If photos were not uploaded, re-render the page
             return HttpResponseRedirect(request.path_info)
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginAPIView(View):
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            token = jwt.encode({'user_id': user.id}, 'secret_key', algorithm='HS256')
+            return JsonResponse({'token': token})
+        else:
+            return JsonResponse({'error': 'Invalid credentials'}, status=401)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SignUpAPIView(View):
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        # Additional fields
+        credit_card_number = request.POST.get('credit_card_number', None)
+        svn = request.POST.get('svn', None)
+        # Create user
+        if OutfitWizCustomer.objects.filter(username=username).exists():
+            return JsonResponse({'error': 'Username already exists'}, status=400)
+        if OutfitWizCustomer.objects.filter(email=email).exists():
+            return JsonResponse({'error': 'Email is already used'}, status=400)
+
+        user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+        token = jwt.encode({'user_id': user.id}, 'secret_key', algorithm='HS256')
+        return JsonResponse({'token': token})
+
+class GetSourceImages(View):
+    def get(self, request):
+        data = request.GET
+        origin_url = data.get('source_url', None)
+        if origin_url:
+            result = WebManager.perform_webscrape(origin_url, True)
+            return JsonResponse({'result': result})
+        else:
+            return JsonResponse({'error': 'Missing source_url parameter'}, status=400)
