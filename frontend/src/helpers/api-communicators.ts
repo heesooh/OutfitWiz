@@ -36,20 +36,25 @@ export const checkAuthStatus = async () => {
   return data;
 };
 
-export const uploadImage = async (image1: object, image2: object) => {
-  const response = await axios.post("/image/upload", {image1, image2});
+export const uploadImage = async (data:any) => {
+  const response = await axios.post("/make-prediction", {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': "xxx"
+    },
+  data
+  });
   if (response.status !== 200) {
     throw new Error("Failed to upload images!");
   }
-  const data = response.data;
-  return data;
+  const responseData = response.data;
+  return responseData;
 };
 
-export const getImage = async () => {
-  const response = await axios.get("/image/get");
+export const getToken = async () => {
+  const response = await axios.get("/get-cookie");
   if (response.status !== 200) {
-    throw new Error("Failed to generate AI Image!");
+    throw new Error("Failed to get cookie");
   }
-  const data = response.data;
-  return data;
+  axios.defaults.headers.post['X-CSRF-Token'] = response.data.csrfToken;
 };

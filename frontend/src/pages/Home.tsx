@@ -7,7 +7,7 @@ import { useEffect } from "react";
 const Home = () => {
   const navigate = useNavigate();
   const handleGetStarted = () => {
-    navigate("/product");
+    navigate("/login");
   };
 
   useEffect(() => {

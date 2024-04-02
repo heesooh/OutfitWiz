@@ -5,10 +5,24 @@
   <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
-  <h2>Upload an Image</h2>
-  <input type="file" id="imageInput">
-  <button id="submitButton">Submit</button>
-
+  <div class="container">
+    <div class="title">
+      <img src="./images/icon.png" />
+      <h2>UPLOAD IMAGE</h2>
+    </div>
+    <div class="body">
+      <div id="holder"></div>
+      <div id="results"></div>
+    </div>
+    <div class="btn">
+      <button class="log-btn" type="button" id="cancelButton">
+        <i class="animation"></i>CANCEL</i>
+      </button>
+      <button class="log-btn" type="button" id="uploadButton">
+        </i>UPLOAD<i class="animation"></i>
+      </button>       
+    </div>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
