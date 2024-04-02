@@ -13,7 +13,7 @@ axios.defaults.withCredentials = true;
 const theme = createTheme(
   {
     typography:{
-      fontFamily: "gill sans, san-serif", 
+      fontFamily: "Arial, Helvetica, sans-serif", 
       allVariants: {
         color: "black"
       },

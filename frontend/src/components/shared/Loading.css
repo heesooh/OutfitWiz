@@ -5,7 +5,7 @@
   display: grid;
   place-items: center;
   position: absolute;
-  z-index: 100;
+  z-index: 999;
   top: 0;
 }
 
@@ -16,6 +16,7 @@
     --uib-dot-size: calc(var(--uib-size) * 0.1);
     position: relative;
     display: flex;
+    right: 30px;
     align-items: center;
     justify-content: flex-start;
     height: calc(var(--uib-size) * 0.64);

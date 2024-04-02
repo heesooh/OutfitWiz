@@ -48,7 +48,9 @@ const Home = () => {
   return (
     <div>
       <div className="home-top">
-        <div className="home-top-text">
+        <div className="home-top-text" style={{
+          fontFamily: "gill"
+        }}>
           <div className="home-top-text-title">
             <div
               className="animate__animated animate__fadeInLeft"
