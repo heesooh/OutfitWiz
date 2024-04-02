@@ -63,7 +63,7 @@ class MakePredictionAPIView(View):
             photo_prediction_base64 = base64.b64encode(photo_prediciton_bytes).decode('utf-8')
             photo_prediction_dict = {'photo_prediction' : photo_prediction_base64}
 
-            return JsonResponse(photo_prediction_dict)
+            return JsonResponse({'result': photo_prediction_dict})
         else:
             # If photos were not uploaded, re-render the page
             return HttpResponseRedirect(request.path_info)
