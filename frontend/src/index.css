@@ -100,7 +100,7 @@ body {
 
 .log-btn .animation {
   border-radius: 100%;
-  animation: ripple 0.6s linear infinite;
+  animation: ripple 1s linear infinite;
 }
 
 @keyframes ripple {
@@ -408,3 +408,26 @@ body {
 .home-card-subscribe-button:hover {
   opacity: .85;
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 27, 37, 0.9); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+
+.modal-content {
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+}
+
+

@@ -1,18 +1,33 @@
 import { Box } from "@mui/material";
 import defaultPersonImg from "../assets/pose.png";
 import defaultClothingImg from "../assets/clothing.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import defaultGeneratedImg from "../assets/mockImg.png";
-import { getImage } from '../helpers/api-communicators';
+import { getToken, uploadImage } from "../helpers/api-communicators";
+import loadingGif from "../assets/loading.gif";
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
   const [clothingImg, setClothingImg] = useState<string | null>(null);
-  const [AIImage, setAIImage] = useState<File | null>(null);
-  const [imageData, setImageData] = useState("");
-  
-  const setTestImage = () => {
-    setImageData(defaultGeneratedImg);
+  const [imageData, setImageData] = useState(defaultGeneratedImg);
+  const [isLoading, setIsLoading] = useState(false);
+  const hiddenPhotoInput = useRef<HTMLInputElement>(null);
+  const hiddenClothInput = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    if (!isModalOpen) {
+      handleSubmit();
+    }
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handlePhotoUploadClick = () => {
+    hiddenPhotoInput.current?.click();
+  };
+
+  const handleClothUploadClick = () => {
+    hiddenClothInput.current?.click();
   };
 
   const handleImageUpload = (
@@ -32,17 +47,87 @@ const Product = () => {
 
   const handleSubmit = async () => {
     try {
-      //const data = await getImage();
-      //setImageData(data);
-      setTestImage();
+      setIsLoading(true);
+      await getToken();
+      const body = {
+        photo_person_name: "person.png",
+        photo_clothing_name: "clothing.png",
+        photo_person: personImg,
+        photo_clothing: clothingImg,
+      };
+      const reponseImage = await uploadImage(body);
+      setImageData(reponseImage.photo_prediction);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
       } else {
         console.error("An unknown error occurred");
       }
+    } finally {
+      setIsLoading(false); 
     }
   };
+
+  useEffect(() => {
+    const topDownObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // console.log(entry);
+        if (entry.isIntersecting) {
+          entry.target.classList.add("top-down-show");
+        } else {
+          // entry.target.classList.remove("top-down-show");
+        }
+      });
+    });
+
+    const hiddenYElements = document.querySelectorAll(".top-down-hidden");
+    hiddenYElements.forEach((element) => topDownObserver.observe(element));
+  }, []); // Empty dependency array ensures this effect runs only once, like componentDidMount
+
+  const ModalContent = () => (
+    <div
+      className="home-card-container"
+      style={{
+        backgroundColor: "rgb(169, 169, 169)",
+        border: "5px solid rgb(105, 105, 105)",
+      }}
+    >
+      <p className="home-card-title">Generated Image</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isLoading ? (
+          <img src={loadingGif} alt="Loading..." width="250" height="320" />
+        ) : (
+          <img
+            src={`data:image/jpeg;base64,${imageData}`}
+            alt="Generated AI Image"
+            width="250"
+            height="320"
+          />
+        )}
+        <button
+          className="log-btn"
+          type="submit"
+          onClick={toggleModal}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "15%",
+            marginBottom: "40px",
+            backgroundColor: "black",
+          }}
+        >
+          <i className="animation"></i>Close<i className="animation"></i>
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="chat-flipIn">
@@ -70,17 +155,15 @@ const Product = () => {
       >
         {/* photo of yourself */}
         <div
-          className="home-card-container"
-          style={{ backgroundColor: "rgb(248, 237, 232)" }}
+          className="home-card-container top-down-hidden"
+          style={{
+            backgroundColor: "rgb(235, 241, 255)",
+            border: "5px solid rgb(203, 190, 252)",
+          }}
         >
           <p className="home-card-title">Photo - Yourself</p>
           {personImg ? (
-            <img
-              src={personImg}
-              alt="Yourself"
-              width="250"
-              height="320"
-            />
+            <img src={personImg} alt="Yourself" width="250" height="320" />
           ) : (
             <img
               src={defaultPersonImg}
@@ -89,23 +172,34 @@ const Product = () => {
               height="320"
             />
           )}
-          <form onSubmit={handleSubmit}>
-            <input type="file" onChange={(e) => handleImageUpload(e, setPersonImg)} />
+          <button
+            className="log-btn"
+            type="submit"
+            onClick={handleClothUploadClick}
+          >
+            <i className="animation"></i>Upload<i className="animation"></i>
+          </button>
+          <form>
+            <input
+              type="file"
+              ref={hiddenClothInput}
+              style={{ display: "none" }}
+              onChange={(e) => handleImageUpload(e, setPersonImg)}
+            />
           </form>
         </div>
         {/* photo of clothing */}
+
         <div
-          className="home-card-container"
-          style={{ backgroundColor: "rgb(248, 237, 232)" }}
+          className="home-card-container top-down-hidden"
+          style={{
+            backgroundColor: "rgb(203, 190, 252)",
+            border: "5px solid rgb(235, 241, 255)",
+          }}
         >
           <p className="home-card-title">Photo - The Clothing Item</p>
           {clothingImg ? (
-            <img
-              src={clothingImg}
-              alt="Yourself"
-              width="250"
-              height="320"
-            />
+            <img src={clothingImg} alt="Yourself" width="250" height="320" />
           ) : (
             <img
               src={defaultClothingImg}
@@ -114,14 +208,27 @@ const Product = () => {
               height="320"
             />
           )}
-          <form onSubmit={handleSubmit}>
-            <input type="file" onChange={(e) => handleImageUpload(e, setClothingImg)} />
+          <button
+            className="log-btn"
+            type="submit"
+            onClick={handlePhotoUploadClick}
+          >
+            <i className="animation"></i>Upload<i className="animation"></i>
+          </button>
+          <form>
+            <input
+              type="file"
+              ref={hiddenPhotoInput}
+              style={{ display: "none" }}
+              onChange={(e) => handleImageUpload(e, setClothingImg)}
+            />
           </form>
         </div>
       </Box>
-      <a
-        className="home-card-subscribe-button"
-        href="#"
+      <button
+        className="log-btn"
+        type="submit"
+        onClick={toggleModal}
         style={{
           display: "flex",
           justifyContent: "center",
@@ -130,20 +237,27 @@ const Product = () => {
           margin: "0 auto",
           marginTop: "40px",
         }}
-        onClick={handleSubmit}
       >
-        Generate
-      </a>
-      <Box sx={{
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        mt: "50px",
-        mb: "50px",
-      }}>
-        {imageData && <img src={imageData} alt="Generated AI Image" />}
-      </Box>
+        <i className="animation"></i>Generate<i className="animation"></i>
+      </button>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: "50px",
+          mb: "50px",
+        }}
+      ></Box>
+
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <ModalContent />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
