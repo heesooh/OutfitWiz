@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from outfitwiz_app.models import OutfitWizCustomer
+import numpy as np
 
 
 # Import any other necessary modules
@@ -59,7 +60,7 @@ class MakePredictionAPIView(View):
         if photo_person and photo_clothing:
             photo_prediciton = asyncio.run(MLManager.perform_prediction_new(photo_person_name, photo_clothing_name, photo_person, photo_clothing))
 
-            photo_prediciton_bytes = photo_prediciton.tobytes()
+            photo_prediciton_bytes = photo_prediciton.astype(np.uint8).tobytes()
             photo_prediction_base64 = base64.b64encode(photo_prediciton_bytes).decode('utf-8')
             photo_prediction_dict = {'photo_prediction' : photo_prediction_base64}
 
