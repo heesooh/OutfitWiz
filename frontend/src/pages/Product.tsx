@@ -4,8 +4,7 @@ import defaultClothingImg from "../assets/clothing.png";
 import { useState, useEffect, useRef } from "react";
 import defaultGeneratedImg from "../assets/mockImg.png";
 import { uploadImage } from "../helpers/api-communicators";
-import loadingGif from "../assets/loading.gif";
-// import Loading from "../components/shared/Loading";
+import Loading from "../components/shared/Loading";
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
@@ -16,14 +15,7 @@ const Product = () => {
   const [isLoading, setIsLoading] = useState(false);
   const hiddenPhotoInput = useRef<HTMLInputElement>(null);
   const hiddenClothInput = useRef<HTMLInputElement>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const toggleModal = () => {
-    if (!isModalOpen) {
-      handleSubmit();
-    }
-    setIsModalOpen(!isModalOpen);
-  };
+  const [openPopup, setOpenPopup] = useState(false);
 
   const handlePhotoUploadClick = () => {
     hiddenPhotoInput.current?.click();
@@ -31,6 +23,11 @@ const Product = () => {
 
   const handleClothUploadClick = () => {
     hiddenClothInput.current?.click();
+  };
+
+  const togglPopupStatus = () => {
+    if (!openPopup) handleSubmit();
+    setOpenPopup(!openPopup);
   };
 
   const handleImageUpload = (
@@ -46,14 +43,11 @@ const Product = () => {
         const result = reader.result as string;
         setImage(result);
         setImgName(file.name);
-        console.log(result);
       };
       reader.readAsDataURL(file);
     }
   };
   
-  
-
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -79,20 +73,16 @@ const Product = () => {
   useEffect(() => {
     const topDownObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        // console.log(entry);
         if (entry.isIntersecting) {
           entry.target.classList.add("top-down-show");
-        } else {
-          // entry.target.classList.remove("top-down-show");
         }
       });
     });
-
     const hiddenYElements = document.querySelectorAll(".top-down-hidden");
     hiddenYElements.forEach((element) => topDownObserver.observe(element));
-  }, []); // Empty dependency array ensures this effect runs only once, like componentDidMount
+  }, []);
 
-  const ModalContent = () => (
+  const PopupWindow = () => (
     <div
       className="home-card-container"
       style={{
@@ -100,7 +90,7 @@ const Product = () => {
         border: "5px solid rgb(105, 105, 105)",
       }}
     >
-      <p className="home-card-title">Generated Image</p>
+      <p className="home-card-title">IMAGE RESULT</p>
       <div
         style={{
           display: "flex",
@@ -109,7 +99,10 @@ const Product = () => {
         }}
       >
         {isLoading ? (
-          <img src={loadingGif} alt="Loading..." width="250" height="320" />
+          // <img src={loadingGif} alt="Loading..." width="250" height="320" />
+          <div style={{width: "250px", height: "320px"}}>
+            {/* <p>Loading Image...</p> */}
+          </div>
         ) : (
           // <Loading />
           <img
@@ -122,7 +115,7 @@ const Product = () => {
         <button
           className="log-btn"
           type="submit"
-          onClick={toggleModal}
+          onClick={togglPopupStatus}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -140,6 +133,18 @@ const Product = () => {
 
   return (
     <div className="chat-flipIn">
+      {openPopup && (
+        <div className="modal">
+          <div className="modal-content">
+            <PopupWindow />
+          </div>
+        </div>
+      )}
+      {isLoading? (
+        <Loading />
+      ) : (
+        <></>
+      )}
       <span
         style={{
           fontSize: "50px",
@@ -162,7 +167,7 @@ const Product = () => {
           my: 5,
         }}
       >
-        {/* photo of yourself */}
+        {/* Person Image Upload Block */}
         <div
           className="home-card-container top-down-hidden"
           style={{
@@ -197,8 +202,7 @@ const Product = () => {
             />
           </form>
         </div>
-        {/* photo of clothing */}
-
+        {/* Clothing Image Upload Block */}
         <div
           className="home-card-container top-down-hidden"
           style={{
@@ -237,31 +241,25 @@ const Product = () => {
       <button
         className="log-btn"
         type="submit"
-        onClick={toggleModal}
+        onClick={togglPopupStatus}
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "15%",
-          margin: "0 auto",
-          marginTop: "40px",
+          width: "200px",
+          margin: "auto",
+          marginTop: "50px",
         }}
       >
         <i className="animation"></i>Generate<i className="animation"></i>
       </button>
       <div
+        className="footer"
         style={{
           width: "100%",
           margin: "50px",
         }}
       ></div>
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <ModalContent />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
