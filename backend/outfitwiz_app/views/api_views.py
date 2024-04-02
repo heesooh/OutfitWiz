@@ -39,7 +39,8 @@ class GetCSRFCookieView(View):
         response.set_cookie('csrftoken', csrf_token, httponly=True)
 
         return response
-
+    
+@method_decorator(csrf_exempt, name='dispatch')
 class MakePredictionAPIView(View):
     def post(self, request, *args, **kwargs):
 
