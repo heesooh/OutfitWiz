@@ -1,21 +1,44 @@
 import axios from "axios";
 
-export const signupUser = async (name: string, email: string, password: string) => {
-  const response = await axios.post("/user/signup", { name, email, password });
-  if (response.status !== 201) {
-    throw new Error("Failed to singup");
+export const signupUser = async (username: string, password: string, email: string, first_name: string, last_name: string) => {
+  try {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('email', email);
+    formData.append('first_name', first_name);
+    formData.append('last_name', last_name);
+    const response = await axios.post("http://localhost:8000/api/signup", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error("Failed to Signup");
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Signup Error:', error);
   }
-  const data = response.data;
-  return data;
 };
 
-export const loginUser = async (email: string, password: string) => {
-  const response = await axios.post("/user/login", { email, password });
-  if (response.status !== 201) {
-    throw new Error("Failed to login");
+export const loginUser = async (username: string, password: string) => {
+  try {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    const response = await axios.post("http://localhost:8000/api/login", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error("Failed to Login");
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Login Error:', error);
   }
-  const data = response.data;
-  return data;
 };
 
 export const logoutUser = async () => {
@@ -37,24 +60,32 @@ export const checkAuthStatus = async () => {
 };
 
 export const uploadImage = async (data:any) => {
-  const response = await axios.post("/make-prediction", {
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': "xxx"
-    },
-  data
-  });
-  if (response.status !== 200) {
-    throw new Error("Failed to upload images!");
+  try {
+    const formData = new FormData();
+    formData.append('photo_person_name', data.photo_person_name);
+    formData.append('photo_clothing_name', data.photo_clothing_name);
+    formData.append('photo_person', data.photo_person);
+    formData.append('photo_clothing', data.photo_clothing);
+    const response = await axios.post("http://localhost:8000/api/make-prediction", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        // 'X-CSRF-Token': "xxx"
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error("Failed to Signup");
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Signup Error:', error);
   }
-  const responseData = response.data;
-  return responseData;
 };
 
-export const getToken = async () => {
-  const response = await axios.get("/get-cookie");
-  if (response.status !== 200) {
-    throw new Error("Failed to get cookie");
-  }
-  axios.defaults.headers.post['X-CSRF-Token'] = response.data.csrfToken;
-};
+// TODO: Implement backend Token
+// export const getToken = async () => {
+//   const response = await axios.get("/get-cookie");
+//   if (response.status !== 200) {
+//     throw new Error("Failed to get cookie");
+//   }
+//   axios.defaults.headers.post['X-CSRF-Token'] = response.data.csrfToken;
+// };

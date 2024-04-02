@@ -1,15 +1,25 @@
 import { Box, Typography } from "@mui/material";
 import CustomizedInput from "../components/shared/CustomizedInput";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { loginUser } from "../helpers/api-communicators";
 
 const Login = () => {
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const formData = new FormData(event.currentTarget);
-    // const email = formData.get("email") as string;
-    // const password = formData.get("password") as string;
-    navigate("/product");
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+    try {
+      toast.loading("Logging In...", {id: "login"});
+      const data = await loginUser(username, password);
+      toast.success("Login Success!", {id: "login"});
+      navigate("/product");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to Login!", {id: "login"});
+    }
   };
 
   return (
@@ -49,7 +59,7 @@ const Login = () => {
                 >
                   LOGIN
                 </Typography>
-                <CustomizedInput type="email" name="email" label="Email" />
+                <CustomizedInput type="text" name="username" label="Username" />
                 <CustomizedInput
                   type="password"
                   name="password"

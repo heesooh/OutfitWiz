@@ -3,12 +3,15 @@ import defaultPersonImg from "../assets/pose.png";
 import defaultClothingImg from "../assets/clothing.png";
 import { useState, useEffect, useRef } from "react";
 import defaultGeneratedImg from "../assets/mockImg.png";
-import { getToken, uploadImage } from "../helpers/api-communicators";
+import { uploadImage } from "../helpers/api-communicators";
 import loadingGif from "../assets/loading.gif";
+// import Loading from "../components/shared/Loading";
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
+  const [personImgName, setPersonImgName] = useState<string | null>(null);
   const [clothingImg, setClothingImg] = useState<string | null>(null);
+  const [clothingImgName, setclothingImgName] = useState<string | null>(null);
   const [imageData, setImageData] = useState(defaultGeneratedImg);
   const [isLoading, setIsLoading] = useState(false);
   const hiddenPhotoInput = useRef<HTMLInputElement>(null);
@@ -32,39 +35,42 @@ const Product = () => {
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setImage: React.Dispatch<React.SetStateAction<string | null>>
+    setImage: React.Dispatch<React.SetStateAction<string | null>>,
+    setImgName: React.Dispatch<React.SetStateAction<string | null>>
   ) => {
     e.preventDefault();
     const file = e.target.files && e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string);
+        const result = reader.result as string;
+        setImage(result);
+        setImgName(file.name);
+        console.log(result);
       };
       reader.readAsDataURL(file);
     }
   };
+  
+  
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      await getToken();
-      const body = {
-        photo_person_name: "person.png",
-        photo_clothing_name: "clothing.png",
+      // TODO: Implement backend token
+      // await getToken();
+      const imageData = {
+        photo_person_name: personImgName,
+        photo_clothing_name: clothingImgName,
         photo_person: personImg,
         photo_clothing: clothingImg,
       };
-      const reponseImage = await uploadImage(body);
+      const reponseImage = await uploadImage(imageData);
       setImageData(reponseImage.photo_prediction);
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      } else {
-        console.error("An unknown error occurred");
-      }
+      console.error(error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -103,6 +109,7 @@ const Product = () => {
         {isLoading ? (
           <img src={loadingGif} alt="Loading..." width="250" height="320" />
         ) : (
+          // <Loading />
           <img
             src={`data:image/jpeg;base64,${imageData}`}
             alt="Generated AI Image"
@@ -184,7 +191,7 @@ const Product = () => {
               type="file"
               ref={hiddenClothInput}
               style={{ display: "none" }}
-              onChange={(e) => handleImageUpload(e, setPersonImg)}
+              onChange={(e) => handleImageUpload(e, setPersonImg, setPersonImgName)}
             />
           </form>
         </div>
@@ -220,7 +227,7 @@ const Product = () => {
               type="file"
               ref={hiddenPhotoInput}
               style={{ display: "none" }}
-              onChange={(e) => handleImageUpload(e, setClothingImg)}
+              onChange={(e) => handleImageUpload(e, setClothingImg, setclothingImgName)}
             />
           </form>
         </div>
@@ -240,17 +247,12 @@ const Product = () => {
       >
         <i className="animation"></i>Generate<i className="animation"></i>
       </button>
-      <Box
-        sx={{
+      <div
+        style={{
           width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          mt: "50px",
-          mb: "50px",
+          margin: "50px",
         }}
-      ></Box>
-
+      ></div>
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
