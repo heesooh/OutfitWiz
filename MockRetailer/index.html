@@ -65,7 +65,7 @@
     <script>
         function tryOnNow() {
             var currentUrl = window.location.href;
-            var getRequestUrl = 'http://127.0.0.1:8000/get-source-images?source_url=' + encodeURIComponent(currentUrl);
+            var getRequestUrl = 'http://127.0.0.1:8000/api/try-on-now?source_url=' + encodeURIComponent(currentUrl);
             window.open(getRequestUrl, '_blank'); // Open in a new tab
         }
     </script>
