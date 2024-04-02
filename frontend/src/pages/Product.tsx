@@ -3,18 +3,22 @@ import defaultPersonImg from "../assets/pose.png";
 import defaultClothingImg from "../assets/clothing.png";
 import { useState, useEffect, useRef } from "react";
 import defaultGeneratedImg from "../assets/mockImg.png";
-import { getImage } from "../helpers/api-communicators";
+import { getToken, uploadImage } from "../helpers/api-communicators";
+import loadingGif from "../assets/loading.gif";
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
   const [clothingImg, setClothingImg] = useState<string | null>(null);
   const [imageData, setImageData] = useState(defaultGeneratedImg);
+  const [isLoading, setIsLoading] = useState(false);
   const hiddenPhotoInput = useRef<HTMLInputElement>(null);
   const hiddenClothInput = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
-    handleSubmit();
+    if (!isModalOpen) {
+      handleSubmit();
+    }
     setIsModalOpen(!isModalOpen);
   };
 
@@ -43,16 +47,24 @@ const Product = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await getImage();
-      if (data != null) {
-        setImageData(data);
-      }
+      setIsLoading(true);
+      await getToken();
+      const body = {
+        photo_person_name: "person.png",
+        photo_clothing_name: "clothing.png",
+        photo_person: personImg,
+        photo_clothing: clothingImg,
+      };
+      const reponseImage = await uploadImage(body);
+      setImageData(reponseImage.photo_prediction);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
       } else {
         console.error("An unknown error occurred");
       }
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -81,24 +93,39 @@ const Product = () => {
       }}
     >
       <p className="home-card-title">Generated Image</p>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <img src={imageData} alt="Generated AI Image" width="250" height="320" />
-      <button
-        className="log-btn"
-        type="submit"
-        onClick={toggleModal}
+      <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
-          width: "15%",
-          marginBottom: "40px",
-          backgroundColor: "black",
         }}
       >
-        <i className="animation"></i>Close<i className="animation"></i>
-      </button>
-     </div>
+        {isLoading ? (
+          <img src={loadingGif} alt="Loading..." width="250" height="320" />
+        ) : (
+          <img
+            src={`data:image/jpeg;base64,${imageData}`}
+            alt="Generated AI Image"
+            width="250"
+            height="320"
+          />
+        )}
+        <button
+          className="log-btn"
+          type="submit"
+          onClick={toggleModal}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "15%",
+            marginBottom: "40px",
+            backgroundColor: "black",
+          }}
+        >
+          <i className="animation"></i>Close<i className="animation"></i>
+        </button>
+      </div>
     </div>
   );
 
