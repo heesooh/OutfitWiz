@@ -63,8 +63,10 @@ class MakePredictionAPIView(View):
             photo_prediciton_bytes = photo_prediciton.astype(np.uint8).tobytes()
             photo_prediction_base64 = base64.b64encode(photo_prediciton_bytes).decode('utf-8')
             photo_prediction_dict = {'photo_prediction' : photo_prediction_base64}
-
-            return JsonResponse({'result': photo_prediction_dict})
+            response = JsonResponse({'result': photo_prediction_dict})
+            response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+            response['Access-Control-Allow-Credentials'] = 'true'
+            return response
         else:
             # If photos were not uploaded, re-render the page
             return HttpResponseRedirect(request.path_info)

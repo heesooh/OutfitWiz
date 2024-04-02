@@ -8,7 +8,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 
 axios.defaults.baseURL = "http://localhost:3000";
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 
 const theme = createTheme(
   {

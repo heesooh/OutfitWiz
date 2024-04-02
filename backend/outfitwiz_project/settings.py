@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-(mwgyt2=p7!)rc4g^iu2g&8n(zs#+df*yg!*(fm%lzj_4)oci1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 
 # Application definition
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'outfitwiz_app'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

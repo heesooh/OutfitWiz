@@ -66,6 +66,8 @@ const Product = () => {
         photo_clothing: clothingImg,
       };
       const reponseImage = await uploadImage(imageData);
+      console.log("Printing Data !!!")
+      console.log(reponseImage)
       setImageData(reponseImage.photo_prediction);
     } catch (error) {
       console.error(error);
