@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="17px" viewBox="0 0 22 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 56.3 (101010) - https://sketch.com -->
+    <title>F0309D4D-6755-4B3B-90E2-C5988D165DA0</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M16.0517854,11.6589287 L23.0642855,5.70982157 L23.0642855,20.0388395 L16.0517854,11.6589287 L16.0517854,11.6589287 Z M2.01473223,4.95312512 L23.0133924,4.95312512 L12.5133927,13.7991075 L2.01473223,4.95312512 Z M12.5107147,14.6629466 L15.591072,12.0553574 L22.2821436,20.0468749 L2.74598221,20.0468749 L9.43705388,12.1370539 L12.5107147,14.6629466 Z M8.94821457,11.6589287 L1.93437508,5.70982157 L1.93437508,20.0388395 L8.94821457,11.6589287 Z" id="path-1"></path>
+    </defs>
+    <g id="Footer-Bay" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Bay-Desktop-Footer-1024-Copy" transform="translate(-20.000000, -681.000000)">
+            <g id="Group-3" transform="translate(18.000000, 672.000000)">
+                <g id="Group-8" transform="translate(0.000000, 3.000000)">
+                    <g id="EMAIL" transform="translate(0.000000, 2.000000)">
+                        <g id="Icons/mail" transform="translate(0.500000, 0.000000)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <g id="mail" fill-rule="nonzero"></g>
+                            <g id="🎨-color" mask="url(#mask-2)" fill="#222222">
+                                <rect id="Rectangle-Copy-33" x="0" y="0" width="25" height="25"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

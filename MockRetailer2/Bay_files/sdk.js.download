@@ -1,0 +1,272 @@
+var publicApiKey = 'XW0QZGI4G471KVAF'; var scriptUrl = 'https://cdn1.affirm.ca/js/v2/affirm.js'; var singleAmount = '';(function (window) {
+    const pb_observer = createObserver();
+    const WIDGET_CONTAINER = 'paybright-widget-container';
+
+    function convertAttributes() {
+        for (container of document.querySelectorAll(
+            `.${WIDGET_CONTAINER}, #${WIDGET_CONTAINER}`
+        )) {
+            convert_pb_prequalify_attributes(container);
+            observe_pb_financedamount(container);
+        }
+    }
+
+    function convert_pb_prequalify_attributes(container) {
+        let dataPageType = 'category';
+        let amount = container.dataset.pb_financedamount;
+        const amountIsNullish = amount == null || amount == '';
+        let affirmBannerElement = document.querySelector('.affirm-site-modal');
+
+        if (amountIsNullish && singleAmount == '') {
+            dataPageType = 'banner';
+            if (!affirmBannerElement) {
+                affirmBannerElement = document.createElement('a');
+                affirmBannerElement.setAttribute('class', 'affirm-site-modal');
+                affirmBannerElement.setAttribute(
+                    'data-page-type',
+                    dataPageType
+                );
+                container.appendChild(affirmBannerElement);
+                const imageElement = document.createElement('img');
+                imageElement.src =
+                    'https://cdn-assets.affirm.com/images/banners/234x60.png';
+                affirmBannerElement.append(imageElement);
+            }
+        } else {
+            if (amountIsNullish) {
+                amount = singleAmount;
+                dataPageType = 'product';
+            } else {
+                affirmBannerElement?.remove();
+            }
+            let affirmElement = container.querySelector('.affirm-as-low-as');
+            if (!affirmElement) {
+                affirmElement = document.createElement('p');
+                container.appendChild(affirmElement);
+            }
+            const correctedAmount = Number(amount.replace(/[^0-9\.]+/g, ''));
+            affirmElement.setAttribute('class', 'affirm-as-low-as');
+            affirmElement.setAttribute('data-page-type', dataPageType);
+            affirmElement.setAttribute('data-amount', correctedAmount * 100); //convert to cents and assign to attribute
+        }
+    }
+
+    function pb_prequalify_init(options) {
+        const pbWidgetContainers = document.querySelectorAll(
+            `.${WIDGET_CONTAINER}, ${WIDGET_CONTAINER}`
+        );
+        //Handle case Widget is initialized before entire document is loaded and no widget containers were found
+        if (
+            pbWidgetContainers.length == 0 &&
+            document.readyState != 'complete'
+        ) {
+            window.addEventListener('load', () => {
+                pb_prequalify_init(options);
+            });
+            return;
+        }
+
+        _affirm_config = {
+            public_api_key: publicApiKey,
+            script: scriptUrl,
+            locale:
+                options?.lang?.substring(0, 2)?.toLocaleLowerCase() == 'fr'
+                    ? 'fr_CA'
+                    : 'en_CA',
+            country_code: 'CAN',
+        };
+
+        (function (m, g, n, d, a, e, h, c) {
+            var b = m[n] || {},
+                k = document.createElement(e),
+                p = document.getElementsByTagName(e)[0],
+                l = function (a, b, c) {
+                    return function () {
+                        a[b]._.push([c, arguments]);
+                    };
+                };
+            b[d] = l(b, d, 'set');
+            var f = b[d];
+            b[a] = {};
+            b[a]._ = [];
+            f._ = [];
+            b._ = [];
+            b[a][h] = l(b, a, h);
+            b[c] = function () {
+                b._.push([h, arguments]);
+            };
+            a = 0;
+            for (
+                c =
+                    'set add save post open empty reset on off trigger ready setProduct'.split(
+                        ' '
+                    );
+                a < c.length;
+                a++
+            )
+                f[c[a]] = l(b, d, c[a]);
+            a = 0;
+            for (c = ['get', 'token', 'url', 'items']; a < c.length; a++)
+                f[c[a]] = function () {};
+            k.async = !0;
+            k.src = g[e];
+            p.parentNode.insertBefore(k, p);
+            delete g[e];
+            f(g);
+            m[n] = b;
+        })(
+            window,
+            _affirm_config,
+            'affirm',
+            'checkout',
+            'ui',
+            'script',
+            'ready',
+            'jsReady'
+        );
+
+        convertAttributes();
+
+        affirm.ui.ready(function () {
+            affirm.ui.refresh();
+        });
+    }
+
+    function observe_pb_financedamount(targetNode) {
+        // Options for the observer (which mutations to observe)
+        const config = {
+            attributes: true,
+            childList: false,
+            subtree: false,
+            attributeFilter: ['data-pb_financedamount'],
+        };
+
+        // Start observing the target node for configured mutations
+        pb_observer.observe(targetNode, config);
+    }
+
+    function createObserver() {
+        // Callback function to execute when mutations are observed
+        const callback = (mutationList, observer) => {
+            mutationList.forEach((mutation) => {
+                convert_pb_prequalify_attributes(mutation.target);
+                if (affirm.ui.refresh) {
+                    affirm.ui.refresh();
+                } else {
+                    affirm.ui.ready(function () {
+                        affirm.ui.refresh();
+                    });
+                }
+            });
+        };
+
+        // Create an observer instance linked to the callback function
+        const observer = new MutationObserver(callback);
+
+        return observer;
+    }
+
+    const getValues = async ({ public_key, amount }) => {
+        if (!public_key || !amount) return;
+        const cleanAmt =
+            formatCurrencyStringToTwoDecimalsAndStripDollar(amount);
+
+        return {
+            MonthlyPayment: (cleanAmt / 4.0).toFixed(2),
+            Term: '',
+            Interestrate: '',
+            ProcessingFee: '',
+            PurchaseAmount: '',
+            TotalInterestCharges: '',
+            TotalProcessingFees: '',
+            TotalCostofBorrowing: '',
+            TotalRepaymentAmount: '',
+            AnnualPercentagerate: '',
+            IsSmallLoan: '',
+            OnlineMinRetailerAmt: '',
+            logoURL: '',
+        };
+    };
+
+    const formatCurrencyStringToTwoDecimalsAndStripDollar = (
+        str,
+        lang = 'en',
+        showDecimals = true
+    ) => {
+        function setCharAt(str, index, chr) {
+            if (index > str.length - 1) return str;
+            return str.substr(0, index) + chr + str.substr(index + 1);
+        }
+
+        let result = parseFloat(str.replace(/[^0-9.-]+/g, '')).toFixed(2);
+        result = showDecimals ? result : Math.round(result).toString();
+        if (lang === 'fr' || lang === 'FR') {
+            result = setCharAt(result, result.length - 3, ',');
+        }
+        return result;
+    };
+
+    function pb_handleLegacyScripts() {
+        const curScriptElement =
+            document.currentScript ||
+            document.querySelector('#pb_prequalify') ||
+            document.querySelector('#paybright');
+
+        const deprecatedURIs = {
+            en: [
+                'shopify.js',
+                'pb_magento1.js',
+                'pbmarketing_iframe.js',
+                'pb_woocommerce.js',
+            ],
+            fr: ['shopify_fr.js', 'pbmarketing_iframe_fr.js'],
+        };
+
+        const filename = getFilename(curScriptElement);
+
+        const isDeprecatedScript = checkIfDeprecatedScript(filename, [
+            ...deprecatedURIs.en,
+            ...deprecatedURIs.fr,
+        ]);
+
+        if (isDeprecatedScript) {
+            pb_prequalify_init({
+                lang: getLangFromFilename(filename, deprecatedURIs.fr),
+            });
+        }
+
+        function getFilename(curScriptElement) {
+            const { src } = curScriptElement || {};
+            const { pathname } = new URL(src);
+            return pathname.split('/').pop();
+        }
+        function checkIfDeprecatedScript(filename, filenamesArray) {
+            return filenamesArray.includes(filename);
+        }
+        function getLangFromFilename(filename, fr) {
+            return fr.includes(filename) ? 'fr' : 'en';
+        }
+    }
+
+    pb_handleLegacyScripts();
+
+    function pb_prequalify(...args) {
+        const [, financedamount, _public_key, _testmode, locale = 'en'] = args;
+        const targetContainer = document.querySelector('.paybright-finance');
+        if (
+            !targetContainer ||
+            targetContainer.dataset.pb_financedamount === financedamount
+        )
+            return;
+        targetContainer.classList.add(WIDGET_CONTAINER);
+        targetContainer.replaceChildren();
+        targetContainer.style.fontSize = '16px';
+        targetContainer.setAttribute('data-pb_financedamount', financedamount);
+        const lang = locale.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+        pb_prequalify_init({ lang });
+    }
+    pb_prequalify.getValues = getValues;
+
+    window.pb_prequalify = pb_prequalify;
+    window.pb_prequalify_init = pb_prequalify_init;
+})(window);

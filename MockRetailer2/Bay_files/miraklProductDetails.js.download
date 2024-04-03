@@ -1,0 +1,1072 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/miraklProductDetails.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "../hbc_core/cartridges/app_hbc_core/cartridge/client/default/js/checkout/paybright.js":
+/*!*********************************************************************************************!*\
+  !*** ../hbc_core/cartridges/app_hbc_core/cartridge/client/default/js/checkout/paybright.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @param {string} amount
+ */
+function togglePaybright(amount, hasGiftCardInCart) {
+    var paybrightPrice = document.getElementById('paybrightprices');
+    // Checking the mulitple iframes is intialized or not
+    // if mulitple are there we are removing next all the div except one
+    var pbModalLength = document.querySelectorAll('[id=pbModal]').length;
+    if (pbModalLength > 1) {
+        $('#pbModal').nextAll().remove();
+    }
+
+    // skip if price is not found or there is any gift card in the cart
+    if (!paybrightPrice || hasGiftCardInCart) {
+        if (!$('#paybright_prequalify_div').hasClass('d-none')) {
+            $('#paybright_prequalify_div').addClass('d-none');
+            $('#svg-svg-paybright-prequalify').addClass('d-none');
+        }
+        return;
+    }
+
+    var min = convertToFloat(paybrightPrice.getAttribute('data-paybrightMin'));
+    var max = convertToFloat(paybrightPrice.getAttribute('data-paybrightMax'));
+    if (convertToFloat(amount) >= min && convertToFloat(amount) <= max) {
+        $(' #paybright_prequalify_div').removeClass('d-none');
+        $('#svg-svg-paybright-prequalify').removeClass('d-none');
+        document.getElementById('paybright_prequalify_div').setAttribute('data-pb_financedamount', amount);
+        try {
+            window.pb_prequalify_init({
+                triggerElement: 'Link',
+                triggerClass: 'paybright-widget-container',
+                noFiguresInModal: false,
+                showDecimals: true,
+                triggerText: window.globalData.site.locale === 'fr_CA' ? 'En savoir plus' : 'Learn More',
+                hideTriggerLeadText: false
+            });
+        } catch (err) {
+
+        }
+    } else {
+        $(' #paybright_prequalify_div').addClass('d-none');
+        $('.svg-svg-paybright').addClass('d-none');
+    }
+}
+
+/**
+ * To convert string to float
+ */
+function convertToFloat(val) {
+    if (val !== '') {
+        val = parseFloat(val);
+    }
+    return val;
+}
+
+/**
+ * To disable paybright payment option
+ */
+function disablePaybrightOption() {
+    // diable Paybright payment option
+    $('li.nav-item.paybright-payment-item').addClass('paypal-disable');
+    $('#paybrightPaymentspay_over_timeRadioButton').attr('disabled', true);
+}
+
+/**
+ * To enable paybright payment option
+ */
+function enablePaybrightOption() {
+    // diable Paybright payment option
+    $('li.nav-item.paybright-payment-item').removeClass('paypal-disable');
+    $('#paybrightPaymentspay_over_timeRadioButton').removeAttr('disabled');
+}
+
+module.exports = {
+    togglePaybright: togglePaybright,
+    disablePaybrightOption: disablePaybrightOption,
+    enablePaybrightOption: enablePaybrightOption
+};
+
+
+/***/ }),
+
+/***/ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/miraklProductDetails.js":
+/*!*********************************************************************************************!*\
+  !*** ./cartridges/custom_mirakl_thebay/cartridge/client/default/js/miraklProductDetails.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var processInclude = window._hbcProcessInclude;
+// To hide 'Other ways to Pay' label when there is no option on PDP
+function toggleOtherWaysToPay(){
+     var pbPreQualifyDiv = document.getElementById('paybright_prequalify_div')? true  : false;
+    var neoPDPDiv = document.getElementById('neopdpshow') ? true  : false;
+    if(!pbPreQualifyDiv && !neoPDPDiv){
+        $('#other-payments-label').addClass('d-none');
+    }else{
+        if((pbPreQualifyDiv && $('#paybright_prequalify_div').hasClass('d-none')) ||  !pbPreQualifyDiv){
+            if((neoPDPDiv && $('#neopdpshow').hasClass('d-none')) || !neoPDPDiv){
+                $('#other-payments-label').addClass('d-none');
+            }
+        }
+    }
+}
+
+function togglePDPMobile(){// to toggle PDP product name section for mobile view, on the top of image container
+    var isMobile = false; //initiate as false
+    // device detection
+    isMobile = window.matchMedia("only screen and (max-width: 543px)").matches;
+    if(isMobile){
+        $(".mobile-toggle-main-div").appendTo(".mobile-toggle-div");
+    }
+    else{
+        $(".mobile-toggle-main-div").prependTo(".pdp-right-section");
+    }
+    $(".primary-images-container").css("visibility", "visible");
+}
+
+$(document).ready(function () {
+    processInclude(__webpack_require__(/*! ./product/detail */ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/detail.js"));
+    processInclude(__webpack_require__(/*! ./product/loadMiraklOffers */ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/loadMiraklOffers.js"));
+    processInclude(__webpack_require__(/*! ./product/miraklQuantityForm */ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/miraklQuantityForm.js"));
+    processInclude(__webpack_require__(/*! ./product/addOffer */ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/addOffer.js"));
+    toggleOtherWaysToPay();
+    togglePDPMobile();
+    window.addEventListener('resize', togglePDPMobile);
+});
+
+ 
+
+
+/***/ }),
+
+/***/ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/addOffer.js":
+/*!*****************************************************************************************!*\
+  !*** ./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/addOffer.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Dynamically replace the returned WAInclude element by the isslot from Salesforce
+ * to a direct request to their internal system call of Slot-Request followed by
+ * a direct call to CQRecomm-Start to populate the recommendations
+ * @param {Object} addToCartConfirmationModal popup after product added to cart
+ */
+function addDynamicAddToCartRecommendations(addToCartConfirmationModal) {
+    const appendSlotHTMLElements = function (el) {
+        if (el.nodeName === 'SCRIPT') {
+            var script = document.createElement('script');
+            script.innerHTML = el.innerHTML;
+            document.querySelector('#productAddedToCartModal .modal-body .items-like').appendChild(script);
+        } else {
+            document.querySelector('#productAddedToCartModal .modal-body .items-like').append(el);
+        }
+    };
+
+    const $modalHtml = $(addToCartConfirmationModal);
+    const $recsDynamicInclude = $modalHtml.find('.add-to-bag-confirm-recs');
+    if ($recsDynamicInclude.length && $recsDynamicInclude.data('einstein-request')) {
+        fetch($recsDynamicInclude.data('einstein-request'))
+            .then((response) => response.text())
+            .then((htmlEl) => {
+                $(htmlEl).get().forEach((el) => appendSlotHTMLElements(el));
+                window._hbcSlider.einsteinRecommendationListener();
+            });
+    }
+}
+
+/**
+ * @param {Object} addToCartConfirmationModal popup after product added to cart
+ */
+function showAddToCartConfirmation(addToCartConfirmationModal) {
+    var htmlString = '<!-- Modal -->' +
+        '<div class="modal modal-flyout fade gwp right product-added-to-cart-modal" id="productAddedToCartModal" tabindex="-1" role="dialog">' +
+        '<span class="enter-message sr-only" ></span>' +
+        '<div class="modal-dialog gift-offers quick-view-dialog ">' +
+        '<!-- Modal content-->' +
+        '<div class="modal-content">' +
+        '<div class="modal-header">' +
+        '    <button type="button" class="close fa-pull-right" data-dismiss="modal">' +
+        '        <span aria-hidden="true" class="cancel-icon svg-svg-22-cross svg-svg-22-cross-dims"></span>' +
+        '    </button>' +
+        '    <span aria-hidden="true" class="choice-bonus-header"></span>' +
+        '        <span>' + addedToBagLabel + '</span>' + // eslint-disable-line no-undef
+        '    <span class="sr-only"> </span>' +
+        '</div>' +
+        '<div class="modal-body"></div>' +
+        '<div class="modal-footer"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    $('body')
+        .append(htmlString);
+
+    $('#productAddedToCartModal').modal({ focus: false });
+    $('.quick-view-dialog .modal-content')
+        .spinner()
+        .start();
+
+    $('#productAddedToCartModal .modal-body').empty();
+    $('#productAddedToCartModal .modal-body').html(addToCartConfirmationModal);
+    addDynamicAddToCartRecommendations(addToCartConfirmationModal);
+}
+    /**
+     * PDP Add to cart model actions.
+     *
+    **/
+    $('body').on('shown.bs.modal', '#productAddedToCartModal', function () {
+        if($('.confirm-container').length){
+            $('#productAddedToCartModal').modal({ focus: true });
+            $('#productAddedToCartModal .quick-view-dialog .close').focus();
+        }
+    });
+
+/**
+ * Updates the Mini-Cart quantity value after the customer has pressed the "Add to Cart" button
+ * @param {string} response - ajax response from clicking the add to cart button
+ */
+function handlePostCartAdd(response) {
+    if (response) {
+        $('.minicart')
+            .trigger('count:update', response);
+        if (!response.error && response.addToCartConfirmationModal) {
+            if (($('.pg-name').length > 0 && $('.pg-name').val() === 'wishlist')) {
+                $('body').trigger('adobeTagManager:moveFavToBag', response);
+            } else {
+                $('body').trigger('adobeTagManager:addToBag', response);
+            }
+
+            showAddToCartConfirmation(response.addToCartConfirmationModal);
+        }
+
+        // don't show the error message in PLP (Product array)-SFDEV-7748
+        if (response.sourcepage && response.sourcepage === 'pdp') {
+            if ($('.add-to-cart-messages').length === 0) {
+                $('.attribute.quantity').append(
+                    '<div class="add-to-cart-messages"></div>'
+                );
+            }
+            if (response.message !== '') {
+                $('.add-to-cart-messages')
+                    .html(
+                        // eslint-disable-next-line no-undef
+                        '<div class="error" role="alert">' +
+                        response.message +
+                        '</div>'
+                    );
+            }
+
+            setTimeout(function () {
+                $('.add-to-cart-messages .error')
+                    .remove();
+            }, 5000);
+        }
+    }
+}
+
+/**
+ * Returns price value
+ * @param {models.price.default.DefaultPrice} priceModel - The price model
+ * @returns {number} The price value
+ */
+function getPrice(priceModel) {
+    return !priceModel.sales ? priceModel.list.value : priceModel.sales.value;
+}
+
+/**
+ * Returns list price value
+ * @param {models.price.default.DefaultPrice} priceModel - The price model
+ * @returns {number} The list price value
+ */
+function getListPrice(priceModel) {
+    return priceModel.list ? priceModel.list.value : '';
+}
+
+/**
+ * Add an offer to the cart
+ */
+function addOfferToCart() {
+    $(document).on('click', 'button.offer-add-to-cart:not(.prdt_cartwl_btn)', function () {
+        var addToCartObject = $(this).data('mirakl')
+            ? $(this).data('mirakl')
+            : null;
+        if (addToCartObject) {
+            $('.quick-view-dialog .modal-content').spinner().start() || $.spinner().start();
+            var addToCartUrl = addToCartObject.url;
+            var pid = addToCartObject.pid;
+            var priceInfo = addToCartObject.priceInfo;
+            var productName = addToCartObject.productName;
+            var channels = addToCartObject.channels;
+            var price = getPrice(addToCartObject.price);
+            var listPrice = getListPrice(addToCartObject.price);
+            var operatorProductId = $(this).data('pid');
+            var shopName = addToCartObject.shopName;
+            var offerState = addToCartObject.offerState;
+            var shopId = addToCartObject.shopId;
+            var quantity = $('.quantity')
+                .find('.quantity-select')
+                .val();
+            var form = {
+                pid: pid,
+                price: price,
+                channels: channels,
+                listPrice: listPrice,
+                productName: productName,
+                quantity: quantity,
+                operatorProductId: operatorProductId,
+                shopName: shopName,
+                offerState: offerState,
+                shopId: shopId,
+                priceInfo: priceInfo,
+                addToCartInfo: JSON.stringify(addToCartObject)
+            };
+
+            $(this).trigger('updateAddToCartFormData', form);
+            var $productContainer = $(this).closest('.product-detail');
+
+            if (addToCartUrl) {
+                $.ajax({
+                    url: addToCartUrl,
+                    method: 'POST',
+                    data: form,
+                    success: function (data) {
+                        if ($productContainer.length && $productContainer.parents('.cart-page').length && $productContainer.hasClass('product-rec-quickview')) {
+                            window.location.reload();
+                        }
+                        else {
+                            $('body').trigger('triggerHandlePostCartAdd', data);
+                            $('body').trigger('product:afterAddToCart', data);
+                            $.spinner().stop();
+                        }
+                    },
+                    error: function () {
+                        $.spinner().stop();
+                    }
+                });
+            }
+        }
+        $('#allOffersModal').modal('hide');
+    });
+}
+
+$('body').on('triggerHandlePostCartAdd', function (e, data) {
+    handlePostCartAdd(data);
+});
+
+module.exports = {
+    addOfferToCart: addOfferToCart
+};
+
+
+/***/ }),
+
+/***/ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/detail.js":
+/*!***************************************************************************************!*\
+  !*** ./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/detail.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var loadMiraklOffers = __webpack_require__(/*! ./loadMiraklOffers */ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/loadMiraklOffers.js");
+var paybright = __webpack_require__(/*! core/checkout/paybright */ "../hbc_core/cartridges/app_hbc_core/cartridge/client/default/js/checkout/paybright.js");
+
+/**
+ * Compute the product price and duties for display purpose
+ * @param {Object} Duties Object.
+ */
+function updatePriceWithDuties(dutiesHtml) {
+    var miraklProductData = $('#miraklbuybox').find('button.offer-add-to-cart').data('mirakl');
+    if(miraklProductData && miraklProductData.price && miraklProductData.price.sales && miraklProductData.price.sales.value){
+        updateMiraklPrice(miraklProductData.price.sales.value, dutiesHtml);
+    }
+}
+
+$(document).on('mirakl:price:updated', function(e, dutiesHtml) {
+    var miraklProductData = $('#miraklbuybox').find('button.offer-add-to-cart').data('mirakl');
+    var isPriceRange = $('.product-secondary-section .prod-price .range');
+
+    if ((isPriceRange.length < 0 || isPriceRange.data('is-price-range') !== true) && miraklProductData) {
+        var productPrice = parseFloat($('.product-secondary-section .prod-price .js-final-sale-price').attr('data-unformatted-price'), 10);
+        var duties = null, newProductPrice, dutiesMsg;
+        var productDiscountPrice = miraklProductData && miraklProductData.price && miraklProductData.price.list && miraklProductData.price.list.value ? miraklProductData.price.list.value : '';
+        var productDiscountPriceStr = productDiscountPrice ? $('body').hasClass('fr_CA') ? productDiscountPrice + ' $' : '$'+productDiscountPrice.toFixed(2) : '';
+        if (dutiesHtml && $(dutiesHtml).filter('.duties-content') && $(dutiesHtml).filter('.duties-content').data('value')) {
+            duties = parseFloat($(dutiesHtml).filter('.duties-content').attr('data-value'), 10);
+            dutiesMsg = $(dutiesHtml).filter('.duties-content').attr('data-duties-msg')
+        } else if ( $('#miraklbuybox').length > 0) {
+            duties = parseFloat($('#miraklbuybox').find('.duties-content').attr('data-value'), 10);
+            dutiesMsg = $('#miraklbuybox').find('.duties-content').attr('data-duties-msg');
+        }
+        var $listPrice = $('.product-secondary-section .prices .prod-price .list');
+        if (productDiscountPrice === ''){
+            $listPrice.addClass('d-none');
+        }else{
+            $listPrice.removeClass('d-none');
+            if ($listPrice.length) {
+                $listPrice.addClass('strike-through');
+                $listPrice.find('.value').attr('content', productDiscountPrice);
+            }
+        }
+        if (duties) {
+            newProductPrice = productPrice - duties;
+            var newProductPriceStr = $('body').hasClass('fr_CA') ? newProductPrice + ' $' : '$'+newProductPrice.toFixed(2);
+            $('.product-secondary-section .prod-price .js-final-sale-price').text(newProductPriceStr);
+            $('.product-secondary-section .prod-price .js-final-sale-price').data('unformatted-price', newProductPrice);
+
+            var parentElement = $('div.prices');
+            parentElement.find('span.duties').remove();
+            parentElement.append('<span class="duties">' + dutiesMsg + '</span>');
+        } else {
+            var productPriceStr = $('body').hasClass('fr_CA') ? productPrice + ' $' : '$'+productPrice.toFixed(2);
+            $('div.prices .duties').remove();
+            $('.product-secondary-section .prod-price .js-final-sale-price').text(productPriceStr);
+            $('.product-secondary-section .prod-price .js-final-sale-price').data('unformatted-price', productPrice);
+        }
+    }
+});
+
+/**
+ * Updates the free shipping element
+ */
+function updateFreeShipping() {
+    const freeShippingTextPDP = $(".mp-free-shipping-text-pdp");
+    const freeShippingTextLink = $(".free-shipping-mp-link");
+    const freeShippingMessage = $(".mp-dynamic-free-shipping-text").data("freeshippingmsg");
+    const isFreeShippingAvailable = $(".mp-dynamic-free-shipping-text").data("isfreeshippingavailable");
+    const freeShippingMPElementEffect = $(".shimmerBG-pdp-MP");
+    const freeShippingLable = $(".free-shipping-mp-label");
+    const dnone = 'd-none';
+    if (freeShippingMPElementEffect.length > 0) freeShippingMPElementEffect.addClass(dnone);
+    if (freeShippingLable.length > 0) {
+        freeShippingLable.addClass('d-inline-flex');
+        freeShippingLable.removeClass(dnone);
+    }
+    if(!freeShippingMessage || !freeShippingMessage.length) return;
+    if (isFreeShippingAvailable) {
+        if(freeShippingTextPDP) freeShippingTextPDP.text(freeShippingMessage);
+        if(freeShippingTextLink) freeShippingTextLink.removeClass(dnone);
+    } else {
+        if(freeShippingTextPDP) freeShippingTextPDP.text(freeShippingMessage);
+        if(freeShippingTextLink) freeShippingTextLink.addClass(dnone);
+    }
+}
+
+/**
+ * Updates the buybox and load offers when a variant is changed
+ * @param {Object} response - The response from the ajax call(Product-Variant)
+ */
+function updateBuyBox(response) {
+    var pdpPostalCodeSection = $(".shipping-option-postal-code");
+    var freeShippingText = $(".free-ship-text-mp");
+    var dnone="d-none";
+    if (response.data && response.data.isMiraklEnabled && response.data.product && response.data.product.available) {
+        if (pdpPostalCodeSection && pdpPostalCodeSection.length > 0 && pdpPostalCodeSection.hasClass(dnone)){
+            pdpPostalCodeSection.removeClass(dnone);
+        }
+        if (freeShippingText && freeShippingText.length > 0 && freeShippingText.hasClass(dnone)) {
+            freeShippingText.removeClass(dnone);
+        }
+        var miraklBuyBox = $('#miraklbuybox');
+        var normalBuyBox = $('.buybox');
+        if (response.data.callP11) {
+            var buyBoxUrl = miraklBuyBox.data('buybox-url');
+            buyBoxUrl += "?pid=" + response.data.product.id;
+            $.ajax({
+                url: buyBoxUrl,
+                type: 'get',
+                success: function (data) {
+                    miraklBuyBox.empty();
+                    miraklBuyBox.html(data);
+                    var atcButton = miraklBuyBox.find('button.offer-add-to-cart');
+                    var miraklData = atcButton.data('mirakl');
+                    var miraklHudsonPoint = atcButton.data('hudson-point');
+                    if (miraklHudsonPoint && !isNaN(miraklHudsonPoint)) {
+                        $('.rewards-message-section .reward-est-point').text(parseInt(miraklHudsonPoint));
+                    }
+                    updatePriceWithDuties(data);
+                    miraklBuyBox.removeClass(dnone);
+                    normalBuyBox.addClass(dnone);
+                    updateFreeShipping();
+                    $.spinner().stop();
+                },
+                error: function (err) {
+                    miraklBuyBox.addClass(dnone);
+                    normalBuyBox.removeClass(dnone);
+                    $.spinner().stop();
+                }
+            });
+            miraklBuyBox.addClass(dnone);
+            normalBuyBox.removeClass(dnone);
+        } else {
+            miraklBuyBox.addClass(dnone);
+            normalBuyBox.removeClass(dnone);
+        }
+    }
+    else {
+        if (pdpPostalCodeSection && pdpPostalCodeSection.length > 0) {
+            pdpPostalCodeSection && pdpPostalCodeSection.addClass(dnone);
+        }
+        if (freeShippingText && freeShippingText.length > 0) {
+            freeShippingText && freeShippingText.addClass(dnone);
+        }
+    }
+}
+function fillAllOffersModalElement(selectedValueUrl, miraklOffersJson, productData) {
+    if (typeof miraklOffersJson !== 'undefined' && miraklOffersJson.length) {
+        $.ajax({
+            url: selectedValueUrl,
+            type: 'POST',
+            data: {
+                miraklOffersJson: JSON.stringify(miraklOffersJson),
+                productDataJSON: JSON.stringify(productData)
+            },
+            success: function (data) {
+                if (data.offersHtml !== '') {
+                    $('.alloffers-modal-body').empty();
+                    $('.alloffers-modal-body').html(data.offersHtml);
+                    $('#allOffersModal').modal('show');
+                    $.spinner().stop();
+                }
+            },
+            error: function (err) {
+                $.spinner().stop();
+            }
+        });
+    }
+    $.spinner().stop();
+}
+function fillSellerModalElement(selectedValueUrl, sellerId) {
+    $.ajax({
+        url: selectedValueUrl,
+        method: 'POST',
+        data: {
+            sellerId: sellerId
+        },
+        success: function (data) {
+            $('#sellerShippingReturnPolicyModal .seller-shipping-return-policy-modal-content').empty();
+            $('#sellerShippingReturnPolicyModal .seller-shipping-return-policy-modal-content').html(data);
+            $('#sellerShippingReturnPolicyModal').modal('show');
+            $.spinner().stop();
+        },
+        error: function (err) {
+            $.spinner().stop();
+        }
+    });
+}
+
+function updateMiraklHudsonPoint() {
+    var atcButton = $('#miraklbuybox').find('button.offer-add-to-cart');
+    if (atcButton.length > 0)
+    {
+        var miraklHudsonPoint = atcButton.data('hudson-point');
+        if (miraklHudsonPoint && !isNaN(miraklHudsonPoint)) {
+            $('.rewards-message-section .reward-est-point').text(parseInt(miraklHudsonPoint));
+        }
+    }
+}
+/**
+ * Update attributes when the variant was changed + updateBuyBox function call
+ */
+function updateAttribute() {
+    $('body').on('product:afterAttributeSelect', function (e, response) {
+        if ($('.product-set-detail').eq(0)) {
+            if(response.container && response.container.prevObject.length > 0 && response.container.prevObject[0].classList.contains('quantity-select')) {
+                $.spinner().stop();
+                return;
+            }
+            updateBuyBox(response);
+        }
+        if(response && response.data && response.data.product && response.data.product.offerState) {
+            var state = response.data.product.offerState;
+            var stateDiv = $('.product-state');
+            var newState = $('#offer-state-new');
+            var newStateFr = $('#offer-state-new-fr');
+            if (stateDiv.length === 0) return;
+            if (newState.length === 0 || state === newState[0].value) {
+                stateDiv[0].innerText = '';
+            } else if (newStateFr.length === 0 || state === newStateFr[0].value) {
+                stateDiv[0].innerText = '';
+            } else {
+                stateDiv[0].innerText = state;
+            }
+        }
+        if (response.data.product.price.sales && (!('isMarketplaceProduct' in response.data.product) || !response.data.product.isMarketplaceProduct)) {
+            paybright.togglePaybright(response.data.product.price.sales.value);
+        }
+
+    });
+    $(document).on('click', '.seller-shipping-return-policy', function (e) {
+        e.preventDefault();
+        $.spinner().start();
+        var selectedValueUrl = $(this).data('modalurl');
+        var sellerId = $(this).data('sellerid');
+        fillSellerModalElement(selectedValueUrl, sellerId);
+    });
+    $(document).on('click', '.open-all-offers-modal', function(e) {
+        e.preventDefault();
+        $.spinner().start();
+        var selectedValueUrl = $(this).data('modalurl');
+        var miraklOffersJson = $(this).data('mirakloffers');
+        var productData = $(this).data('productdata');
+        fillAllOffersModalElement(selectedValueUrl, miraklOffersJson, productData);
+    });
+    $(document).on('click', '.seller-tooltip-btn', function (e) {
+        $('body').click();
+    });
+    var miraklData = $('#miraklbuybox').find('button.offer-add-to-cart').data('mirakl');
+    if(miraklData){
+        $('.product-secondary-section .prod-price .js-final-sale-price').html(miraklData.price.sales.formatAmount);
+        $('.product-secondary-section .prod-price .js-final-sale-price').attr('data-unformatted-price', miraklData.price.sales.value);
+    }
+
+    updatePriceWithDuties();
+    updateMiraklHudsonPoint();
+}
+
+function handleOfferState() {
+    var offerStateDiv = $('.bestoffer-state');
+    if(offerStateDiv.length > 0){
+        var offerState = offerStateDiv.detach();
+        offerState.removeClass('d-none');
+        var state;
+        if ('innerText' in offerState && offerState.innerText !== null) {
+            state = offerState.innerText.toLocaleLowerCase()
+        } else {
+            state = '';
+        }
+        // We want to hide the state when is one of these.
+        if(state.includes('new') || state.includes('neuf') || state.includes('nouveauté')) return;
+        $('.attributes').before(offerState);
+    }
+}
+
+function updateMiraklPrice(priceValue, dutiesHtml) {
+    var prodPrice = $('.product-secondary-section .prod-price');
+    var newPrice = $('.mirakl-updated-price');
+    if (prodPrice.length > 0 && newPrice.length > 0) {
+        newPrice.detach();
+        newPrice.removeClass('d-none');
+        prodPrice.replaceWith(newPrice.html());
+        $(document).trigger('mirakl:price:updated', dutiesHtml);
+        paybright.togglePaybright(priceValue);
+    }
+    $(document).trigger('mirakl:price:updated', dutiesHtml);
+}
+
+$(document).on('click', '.shipping-returns a', function (e) {
+    e.preventDefault();
+    $.spinner().start();
+    $.ajax({
+        url: this.href,
+        method: 'GET',
+        success: function (data) {
+            const $shippingReturnsEl = $(data).find('.m-shop-page');
+            $shippingReturnsEl.find('.mkp-shop-upper-content-left').remove();
+            $shippingReturnsEl.append($('<div>' + data + '</div>').find('link[href*="/css/shopPage.css"]'));
+            $shippingReturnsEl.find('.shipping-return-title').removeClass('d-none').addClass('mb-1');
+            $shippingReturnsEl.find('.m-shop-page__name-row .shop-name').addClass('m-auto text-center');
+            $shippingReturnsEl.find('.m-shop-page__name-row .shop-name').removeClass('pt-4 pt-lg-5');
+            $('#sellerShippingReturnPolicyModal .seller-shipping-return-policy-modal-content').empty().html($shippingReturnsEl.html());
+            $('#sellerShippingReturnPolicyModal').modal('show');
+            $.spinner().stop();
+        }
+    });
+});
+
+/**
+ * Handling click event to load the postal code input modal
+ */
+$(document).on('click', '.seller-ship-to', (function (e) {
+    e.preventDefault();
+    var actionUrl = $(this).data('url');
+    getModalHtmlElement();
+    fillModalElement(actionUrl);
+}));
+
+/**
+ * Submit the postal code modal form
+ */
+$('body').on('submit', '.pdp-postalCode-form', function (e) {
+    e.preventDefault();
+    $('body').spinner().start();
+    var shopId = $('#bestOffer-shop-id').val();
+    var offerId = $('#bestOffer-id').val();
+    var postalCode = $('#postal-code-input').val();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        data: {
+            postalCode:postalCode,
+            shopId: shopId,
+            offerId: offerId
+        },
+        method: 'GET',
+        success: function (response) {
+            $('body').spinner().stop();
+            if (!response.error) {
+                // hide the modal and stop the loading spinner
+                $('#inStoreInventoryModal').modal('hide');
+                $('#inStoreInventoryModal').spinner().stop();
+
+                // set the entered postal code on pdp
+                $('.seller-ship-to').text(response.postalCode);
+
+                // hide the existing shipping messages
+                if(!$('.free-ship-text-mp').hasClass('d-none')){
+                    $('.free-ship-text-mp').addClass('d-none');
+                }
+                if(!$('#ship-to-delivery-date').hasClass('d-none')){
+                    $('#ship-to-delivery-date').addClass('d-none');
+                }
+
+
+                // show free shipping cost only if valid response from server
+                if('sellerShippingCost' in response && response.sellerShippingCost !== '' && response.sellerShippingCost !== null) {
+                    $('.free-ship-text-mp').removeClass('d-none');
+                    $('#free-shipping-mp-seller').text(response.sellerShippingCost);
+                }
+
+                // show estimated delivery dates only if valid response from server
+                if('stdDelivery' in response && response.stdDelivery !== '' && response.stdDelivery !== null) {
+                    $('#ship-to-delivery-date').removeClass('d-none');
+                    $('#ship-to-delivery-date').text(response.stdDelivery);
+                }
+
+            } else {
+                $('.invalid-feedback').html(response.error);
+                $('.btn-shipping-on-postalcode').parents('.form-group').find('label, input').addClass('is-invalid');
+            }
+        },
+        error: function () {
+            $('#inStoreInventoryModal').spinner().stop();
+        }
+    });
+    return false;
+});
+/**
+ * Generates the modal window on the first call.
+ */
+function getModalHtmlElement() {
+    if ($('#inStoreInventoryModal').length !== 0) {
+        $('#inStoreInventoryModal').remove();
+    }
+    var htmlString = '<!-- Modal -->' +
+        '<div class="modal inStoreInventoryModal" id="inStoreInventoryModal" role="dialog" aria-modal="true">' +
+        '<div class="modal-dialog in-store-inventory-dialog">' +
+        '<!-- Modal content-->' +
+        '<div class="modal-content">' +
+        '<div class="modal-header">' +
+        '<span class="modal-header-title"> POSTAL CODE </span>' +
+        '    <button type="button" class="close svg-svg-22-cross svg-svg-22-cross-dims" data-dismiss="modal" aria-label="Close postal code modal" title="Close">' // eslint-disable-line
+        +
+        '    </button>' +
+        '</div>' +
+        '<div></div>' +
+        '<div class="modal-body"></div>' +
+        '<div class="modal-footer"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    $('body').append(htmlString);
+    $('#inStoreInventoryModal').modal('show');
+}
+
+/**
+ * Replaces the content in the modal window with find postal code components
+ */
+function fillModalElement(targetUrl) {
+    $('#inStoreInventoryModal').spinner().start();
+    $.ajax({
+        url: targetUrl,
+        data: {},
+        method: 'GET',
+        success: function (response) {
+
+            $('.inStoreInventoryModal .modal-header .modal-header-title').empty();
+            $('.inStoreInventoryModal .modal-header .modal-header-title').html(response.postalCodeModalHeader);
+
+            $('.inStoreInventoryModal .modal-body').empty();
+            $('.inStoreInventoryModal .modal-body').html(response.postalCodeHtmlResponse);
+
+            $('#inStoreInventoryModal').modal('show');
+            $('#inStoreInventoryModal').spinner().stop();
+            $
+            $('.form-control-label').addClass('input-focus');
+            $('#inStoreInventoryModal').find('#postal-code-input').focus();
+            if(response.postalCode){
+                $('#postal-code-input').val(response.postalCode);
+            }
+        },
+        error: function () {
+            $('#inStoreInventoryModal').spinner().stop();
+        }
+    });
+
+
+
+}
+module.exports = {
+    updateAttribute: updateAttribute,
+    handleOfferState: handleOfferState
+};
+
+
+/***/ }),
+
+/***/ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/loadMiraklOffers.js":
+/*!*************************************************************************************************!*\
+  !*** ./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/loadMiraklOffers.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Populates the mirakl offers section on pdp
+ */
+function loadMiraklOffers() {
+    var miraklOffersJson = $('.js-mirakl-offers-json').data('mirakloffers');
+    var productData = $('.js-mirakl-offers-json').data('productdata');
+    var hideVariantBuyBoxQuantity = $('.js-hide-variant-quantity').data('hide');
+    var url = $('.js-mirakl-offers-json').data('url');
+
+    if (hideVariantBuyBoxQuantity === true) {
+        $('.attribute.quantity').addClass('d-none');
+    }
+
+    if (typeof miraklOffersJson !== 'undefined' && miraklOffersJson.length) {
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {
+                miraklOffersJson: JSON.stringify(miraklOffersJson),
+                productDataJSON: JSON.stringify(productData)
+            },
+            success: function (data) {
+                if (data.offersHtml !== '') {
+                    $('.mirakl-offer-list').html(data.offersHtml);
+                    $('.mirakl-offer-list').removeClass('d-none');
+                } else {
+                    $('.mirakl-offer-list').addClass('d-none');
+                }
+            }
+        });
+        if (miraklOffersJson.length > 0) {
+            $('.get-offer-list').removeClass('d-none');
+        } else {
+            $('.get-offer-list').addClass('d-none');
+        }
+    } else {
+        $('.mirakl-offer-list').addClass('d-none');
+    }
+}
+
+/**
+ * Functionality for show more button - offer list
+ */
+function showMoreOffers() {
+    $(document).on('click', '.show-more-offers', function () {
+        var pagesize = parseInt($(this).data('pagesize'), 10);
+        var hiddenOffers = $('.offer-list-tile.d-none');
+        var listSize = pagesize > hiddenOffers.length ? hiddenOffers.length : pagesize;
+
+        for (var i = 0; i < listSize; i += 1) {
+            $(hiddenOffers[i]).removeClass('d-none');
+        }
+
+        hiddenOffers = $('.offer-list-tile.d-none');
+
+        if (!hiddenOffers.length) {
+            $('.show-more-offers').addClass('d-none');
+        }
+    });
+}
+
+/**
+ * Functionality for show  offer list
+ */
+function showOffers() {
+    $(document).on('click', '.get-offer-list', function () {
+        document.getElementById('mirakl-offer-list').scrollIntoView();
+        return false;
+    });
+}
+
+module.exports = {
+    loadMiraklOffers: loadMiraklOffers,
+    showMoreOffers: showMoreOffers,
+    showOffers: showOffers
+};
+
+
+/***/ }),
+
+/***/ "./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/miraklQuantityForm.js":
+/*!***************************************************************************************************!*\
+  !*** ./cartridges/custom_mirakl_thebay/cartridge/client/default/js/product/miraklQuantityForm.js ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Updates availability messages for buybox
+ * @param {Object} data - The result of the controller call
+ * @param {jQuery} $addToCartButton - The add to cart button
+ * @param {jQuery} $availabilityMessage - The availability messages field
+ */
+function updateAvailability(data, $addToCartButton, $availabilityMessage) {
+    var availabilityValue = '';
+    var availabilityMessages = data.messages;
+
+    availabilityMessages.forEach(function (message) {
+        availabilityValue += '<li><div>' + message + '</div></li>';
+    });
+
+    $availabilityMessage.empty().html(availabilityValue);
+
+    $addToCartButton.attr('disabled', !data.success);
+}
+
+/**
+ * Updates availability for offers when quantity is changed
+ */
+function offerAvailability() {
+    $(document).on('change', '.offer-quantity-select', function (e) {
+        e.preventDefault();
+        var url = $(this)
+            .children('option:selected')
+            .data('url');
+        var $addToCartButton;
+        var $availabilityMessage;
+
+        $addToCartButton = $(this)
+            .closest('.offer-details')
+            .find('.offer-add-to-cart');
+        $availabilityMessage = $(this)
+            .closest('.offer-details')
+            .find('.offer-availability-msg');
+
+        $.ajax({
+            url: url,
+            method: 'get',
+            success: function (data) {
+                updateAvailability(
+                    data.result,
+                    $addToCartButton,
+                    $availabilityMessage
+                );
+            }
+        });
+    });
+}
+
+module.exports = {
+    offerAvailability: offerAvailability
+};
+
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=miraklProductDetails.js.map

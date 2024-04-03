@@ -1,0 +1,161 @@
+.container {
+  max-width: 1260px; }
+
+.hudson-loyalty-signup {
+  font-family: "proxima-nova", helvetica, Arial, Sans-Serif;
+  font-size: 12px;
+  margin-top: 9px; }
+  .hudson-loyalty-signup__link {
+    font-weight: 600;
+    text-decoration: underline; }
+
+.hudson-text {
+  margin-bottom: 0; }
+
+.rewards-dd-insert {
+  border-bottom: solid 1px #e5e5e5;
+  height: unset;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  padding-top: 14px; }
+  @media screen and (min-width: 768px) {
+    .rewards-dd-insert {
+      padding-bottom: 0px;
+      height: unset;
+      padding-top: 0;
+      border-top: none;
+      text-align: left;
+      font-size: 14px; } }
+  @media screen and (max-width: 1025px) {
+    .rewards-dd-insert {
+      border-top: solid 1px #e5e5e5; } }
+  .rewards-dd-insert .dollars-to-next-tier-sm {
+    color: #08498f; }
+
+.rewards-dd-insert--no-bot-border {
+  border-bottom: none;
+  padding-top: 0;
+  padding-bottom: 12px;
+  margin-bottom: 0; }
+
+.rewards-dd-insert__header {
+  display: block;
+  color: #222;
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px; }
+
+.points-available {
+  display: none;
+  margin-bottom: 0; }
+  @media screen and (min-width: 767.98px) {
+    .points-available {
+      display: block;
+      line-height: 14px;
+      font-weight: 600;
+      text-align: right; } }
+
+.rewards-dd-insert__subheader {
+  display: inline-block;
+  padding: unset;
+  color: #08498f;
+  text-align: left;
+  text-transform: none;
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px; }
+  .rewards-dd-insert__subheader .points-available {
+    display: block; }
+
+.rewards-dd-insert__signup-link.rewards-dd-insert__signup-link.rewards-dd-insert__signup-link.rewards-dd-insert__signup-link {
+  display: -ms-flexbox;
+  display: flex;
+  padding: unset;
+  color: #08498f;
+  text-align: left;
+  text-transform: none;
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  border-top: none !important;
+  white-space: normal;
+  padding-top: 0 !important; }
+
+.rewards-dd-insert__loyalty-link.rewards-dd-insert__loyalty-link.rewards-dd-insert__loyalty-link.rewards-dd-insert__loyalty-link {
+  display: -ms-flexbox;
+  display: flex;
+  padding: unset;
+  color: #444;
+  text-align: left;
+  text-transform: none;
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  border-top: none !important;
+  padding-top: 0 !important; }
+
+.rewards-message-section span {
+  color: #08498f; }
+
+.loyalty-rewards-content {
+  text-align: center; }
+  .loyalty-rewards-content .rewards-membership-question {
+    color: #000;
+    text-transform: uppercase;
+    margin-bottom: 5px; }
+  .loyalty-rewards-content .rewards-signin {
+    color: #444;
+    letter-spacing: 0.5px; }
+    .loyalty-rewards-content .rewards-signin a {
+      text-decoration: underline; }
+
+.rewards-icon {
+  height: 35px;
+  margin-bottom: 10px; }
+
+.header-account-drawer > * {
+  display: block; }
+
+.loyalty-user-message {
+  float: none;
+  display: inline;
+  font-family: "proxima-nova-bold", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  text-transform: none;
+  color: #222; }
+  .loyalty-user-message--sign-in {
+    line-height: 53px; }
+
+@media screen and (min-width: 767.98px) {
+  .user-message--base {
+    color: #08498f; }
+  .user-message--plus {
+    color: #08498f; }
+  .user-message--vip {
+    color: #08498f; } }
+
+@media screen and (min-width: 767.98px) {
+  .header-negative-points {
+    display: none; } }
+
+.navbar .navbar-nav .signin .nav-link.tier-name {
+  line-height: 21px;
+  margin: 14px 0;
+  color: #222; }
+
+.dollars-to-next-tier {
+  text-transform: none; }
+  @media screen and (min-width: 767.98px) {
+    .dollars-to-next-tier ~ span {
+      /*
+        This is the points balance (and the comma preceding it).
+        This is not supposed to show on Desktop if dollars-to-next-tier is there.
+        See https://app.zeplin.io/project/5dd567535596db375b8833ac/screen/5dd5687856cd633730c6a1e3
+      */
+      display: none; } }
+
