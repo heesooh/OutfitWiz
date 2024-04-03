@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView
 from outfitwiz_app.views.old_views import HomePageView, LoginPageView, ProfilePageView, StylePageView, ProductPageView, LogoutView
-from outfitwiz_app.views.api_views import MakePredictionAPIView, GetCSRFCookieView, PingView, GetSourceImages, LoginAPIView, SignUpAPIView, GetUserDataAPIView
+from outfitwiz_app.views.api_views import MakePredictionAPIView, PingView, GetSourceImages, LoginAPIView, SignUpAPIView, GetUserDataAPIView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/home/', permanent=False)),
@@ -28,13 +28,11 @@ urlpatterns = [
     # API Views
     path('api/make-prediction', MakePredictionAPIView.as_view(), name='make_prediction'),
     path('api/get-source-images', GetSourceImages.as_view(), name='get_cookie'),
-    path('api/get-cookie', GetCSRFCookieView.as_view(), name='get_cookie'),
     path('api/login', LoginAPIView.as_view(), name='login'),
     path('api/signup', SignUpAPIView.as_view(), name='signup'),
     path('api/get-user-data', GetUserDataAPIView.as_view(), name='get_user_data'),
 
     #Old Views:
-
     path('home/', HomePageView.as_view(), name="home_page"),
     path('accounts/profile/', ProfilePageView.as_view(), name="profile_page"),
     path('accounts/login/', LoginPageView.as_view(), name='login_page'),

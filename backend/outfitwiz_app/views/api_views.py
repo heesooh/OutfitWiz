@@ -4,8 +4,6 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 import base64
-import cv2
-import os
 import jwt
 from outfitwiz_app.vton.cloth_mask import process_cloth_image
 import asyncio
@@ -24,27 +22,13 @@ from outfitwiz_app.models import OutfitWizCustomer
 import numpy as np
 
 
-# Import any other necessary modules
-
 class PingView(View):
     def get(self, request, *args, **kwargs):
         return JsonResponse({'status': 'Server running'})
     
-class GetCSRFCookieView(View):
-    def get(self, request, *args, **kwargs):
-        # Get CSRF token
-        csrf_token = get_token(request)
-
-        # Create a JSON response with a success message and the CSRF token as a cookie
-        response = JsonResponse({'message': 'CSRF token generated'})
-        response.set_cookie('csrftoken', csrf_token, httponly=True)
-
-        return response
-    
 @method_decorator(csrf_exempt, name='dispatch')
 class MakePredictionAPIView(View):
     def post(self, request, *args, **kwargs):
-
         data = request.POST
         photo_person_name = data['photo_person_name']
         photo_clothing_name = data['photo_clothing_name']
@@ -96,7 +80,7 @@ class SignUpAPIView(View):
         # Additional fields
         credit_card_number = request.POST.get('credit_card_number', None)
         svn = request.POST.get('svn', None)
-        # Create user
+
         if OutfitWizCustomer.objects.filter(username=username).exists():
             return JsonResponse({'error': 'Username already exists'}, status=400)
         if OutfitWizCustomer.objects.filter(email=email).exists():
@@ -110,6 +94,7 @@ class GetSourceImages(View):
     def get(self, request):
         data = request.GET
         origin_url = data.get('source_url', None)
+
         if origin_url:
             result = WebManager.perform_webscrape(origin_url, True)
             return JsonResponse({'result': result})
@@ -119,7 +104,6 @@ class GetSourceImages(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class GetUserDataAPIView(View):
     def post(self, request):
-        # Extract the token from the request
         token = request.POST.get('token')
 
         # Decode the token to get the user_id

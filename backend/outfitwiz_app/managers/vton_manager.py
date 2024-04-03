@@ -6,7 +6,7 @@ class VTONManager:
     @staticmethod
     def set_pairs(image1_name, image2_name):
         try:
-            # Open the file in 'a' mode (append)
+            # Open the file in 'w' mode (write)
             with open('outfitwiz_app/vton/datasets/test_pairs_dynamic.txt', 'w') as file:
                 # Write the strings to the file, separated by a space
                 file.write(f"{image1_name} {image2_name}\n")

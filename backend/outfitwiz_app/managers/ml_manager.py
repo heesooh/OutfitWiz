@@ -1,7 +1,6 @@
 from outfitwiz_app.managers.vton_manager import VTONManager
 from outfitwiz_app.managers.cloth_manager import ClothManager
 import os
-import cv2
 from PIL import Image
 import io
 import base64
@@ -17,6 +16,26 @@ class MLManager:
 
     @staticmethod
     async def perform_prediction_new(photo_person_name, photo_clothing_name, photo_person, photo_clothing):   
+        VTONManager.set_pairs(photo_person_name, photo_clothing_name)     
+        await VTONManager.call_test_script()
+
+        photo_prediction_name = photo_person_name[:-7] + "_" + photo_clothing_name
+        photo_prediction_path = os.path.join('outfitwiz_app', 'vton', 'results', 'demo', photo_prediction_name)
+
+        with open(photo_prediction_path, 'rb') as file:
+            binary_data = file.read()
+
+        buffer = io.BytesIO(binary_data)
+        image = Image.open(buffer)
+
+        base64_data = io.BytesIO()
+        image.save(base64_data, format="JPEG")
+
+        base64_string = base64.b64encode(base64_data.getvalue()).decode("utf-8")
+        return base64_string
+    
+    @staticmethod
+    async def perform_prediction_complete(photo_person_name, photo_clothing_name, photo_person, photo_clothing):   
         #photo_person_resized = cv2.resize(photo_person, (768, 1024))
         #photo_clothing_resized = cv2.resize(photo_clothing, (768, 1024))
 
