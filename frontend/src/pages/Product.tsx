@@ -118,7 +118,7 @@ const Product = () => {
 
   const handleSelectSourceImage = (name: string, base64: string) => {
     setclothingImgName(name);
-    setClothingImg(base64);
+    setClothingImg(`data:image;base64,${base64}`);
     setScrapePopup(false);
   }
 
@@ -205,7 +205,7 @@ const Product = () => {
                     {/* <img src={`${image.base64}`} alt={image.name} /> */}
                     {/* <p>Name: {image.name}</p> */}
                     {/* <p>URL: {image.url}</p> */}
-                    <button onClick={() => handleSelectSourceImage(image.name, image.base64_image)}>SELECT</button>
+                    <button onClick={() => handleSelectSourceImage(image.name, image.base64)}>SELECT</button>
                   </div>
                 ))}
               </ul>

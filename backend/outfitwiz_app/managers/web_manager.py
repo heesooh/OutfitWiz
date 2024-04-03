@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import base64
 import os
+import io
+from PIL import Image
 
 class WebManager:
 
@@ -35,7 +37,7 @@ class WebManager:
                 # Extract image URL and name
                 image_url = img_tag['src']
                 if is_bay:
-                    print("IS BAY")
+                    print("IS BAY")                    
                 else:
                     print("NOT BAY")
                 image_name = os.path.basename(image_url)
@@ -44,19 +46,30 @@ class WebManager:
                 if source_is_local:
                     image_url = os.path.dirname(source_url) + '/' + image_url
                     with open(image_url, 'rb') as image_file:
+                        print("1")
                         image_content = image_file.read()
                 else:
                     response = requests.get(image_url)
                     image_content = response.content
+                print("2")
+                buffer = io.BytesIO(image_content)
+                print("3")
+                image = Image.open(buffer)
+                print("4")
 
-                # Encode image content to base64
-                image_base64 = base64.b64encode(image_content).decode('utf-8')
+                base64_data = io.BytesIO()
+                print("5")
+                image.save(base64_data, format="JPEG")
+                print("6")
+
+                base64_string = base64.b64encode(base64_data.getvalue()).decode("utf-8")
+                print("7")
 
                 # Create image dictionary with name, URL, and base64 encoding
                 image_data = {
                     'name': image_name,
                     'url': image_url,
-                    'base64': image_base64
+                    'base64': base64_string
                 }
 
                 # Append image dictionary to the list
