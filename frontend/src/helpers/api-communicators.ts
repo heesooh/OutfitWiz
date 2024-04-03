@@ -81,24 +81,26 @@ export const uploadImage = async (data:any) => {
   }
 };
 
-export const getSourceImage = async (sourceURL: any) => {
+export const getSourceImage = async (sourceURL: string) => {
   try {
-    const formData = new FormData();
-    formData.append('source_url', sourceURL);
-    console.log("backend: ", sourceURL);
-    const response = await axios.post("http://localhost:8000/api/get-source-images", formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    const queryString = `http://localhost:8000/api/get-source-images?source_url=${sourceURL}`;
+    const response = await axios.get(queryString, {
+      // headers: {
+      //   'Content-Type': 'multipart/form-data',
+      // },
     });
+
     if (response.status !== 200) {
-      throw new Error("Failed to Login");
+      throw new Error("Failed to get image data");
     }
+
     return response.data;
   } catch (error) {
-    console.error('Login Error:', error);
+    console.error('Error getting image data:', error);
+    throw error;
   }
 };
+
 
 // TODO: Implement backend Token
 // export const getToken = async () => {

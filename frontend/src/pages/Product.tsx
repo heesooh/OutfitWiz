@@ -104,7 +104,7 @@ const Product = () => {
     try {
       setIsLoading(true);
       toast.loading("Processing Source URL", {id: "sourceURL"});
-      const sourceImages = await getSourceImage(`http://localhost:5173/product?source_url=${sourceURL}`);
+      const sourceImages = await getSourceImage(sourceURL);
       setIsLoading(false);
       toast.success("Retrieved All Images!", {id: "sourceURL"});
       setSourceImages(sourceImages.result);
@@ -136,8 +136,9 @@ const Product = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const source_url = searchParams.get('source_url');
+    let source_url = searchParams.get('source_url');
     if (source_url) {
+      source_url = source_url.replace(/'/g, '');
       handleDataScrape(source_url);
     }
   }, [location.search]);
