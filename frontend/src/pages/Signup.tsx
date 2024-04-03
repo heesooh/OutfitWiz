@@ -3,6 +3,7 @@ import CustomizedInput from "../components/shared/CustomizedInput";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { signupUser } from "../helpers/api-communicators";
+import { setCookie } from "../helpers/cookie-manager";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -18,6 +19,9 @@ const Signup = () => {
         toast.loading("Signing In...", {id: "signin"});
         const data = await signupUser(username, password, email, firstName, lastName);
         toast.success("Signin Success!", {id: "signin"});
+        setCookie("auth_cookie", username, password, data.token, 7);
+        // const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1fQ.ug5qHmalKsNCkJQF1PluVmRfHdx0sgx03e7pMX6s2nE";
+        // setCookie("auth_cookie", username, password, testToken, 7);
         navigate("/upload");
       } catch (err) {
         console.error(err);
