@@ -5,6 +5,8 @@ import { useState, useEffect, useRef } from "react";
 import defaultGeneratedImg from "../assets/mockImg.png";
 import { uploadImage } from "../helpers/api-communicators";
 import Loading from "../components/shared/Loading";
+import stepIcon from "../assets/stepIcon.png";
+import stepIcon2 from "../assets/stepIcon2.png";
 
 const Product = () => {
   const [personImg, setPersonImg] = useState<string | null>(null);
@@ -47,7 +49,7 @@ const Product = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -60,8 +62,8 @@ const Product = () => {
         photo_clothing: clothingImg,
       };
       const reponseImage = await uploadImage(imageData);
-      console.log("Printing Data !!!")
-      console.log(reponseImage)
+      console.log("Printing Data !!!");
+      console.log(reponseImage);
       setImageData(reponseImage.photo_prediction);
     } catch (error) {
       console.error(error);
@@ -100,7 +102,7 @@ const Product = () => {
       >
         {isLoading ? (
           // <img src={loadingGif} alt="Loading..." width="250" height="320" />
-          <div style={{width: "250px", height: "320px"}}>
+          <div style={{ width: "250px", height: "320px" }}>
             {/* <p>Loading Image...</p> */}
           </div>
         ) : (
@@ -140,11 +142,7 @@ const Product = () => {
           </div>
         </div>
       )}
-      {isLoading? (
-        <Loading />
-      ) : (
-        <></>
-      )}
+      {isLoading ? <Loading /> : <></>}
       <span
         style={{
           fontSize: "50px",
@@ -154,8 +152,50 @@ const Product = () => {
           marginTop: "50px",
         }}
       >
-        Upload Two Photos
+        Start to try it on!
       </span>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "50px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "20px",
+            fontWeight: "300",
+            textAlign: "left",
+            maxWidth: "600px",
+          }}
+        >
+          <div>
+            <img
+              src={stepIcon}
+              alt="Room Mngt Icon"
+              style={{ height: "50px", width: "50px" }}
+            />
+            <span> Step 1. Upload a photo of yourself</span>
+          </div>
+          <div>
+            <img
+              src={stepIcon}
+              alt="Room Mngt Icon"
+              style={{ height: "50px", width: "50px" }}
+            />
+            <span> Step 2. Upload a photo of the clothing item</span>
+          </div>
+          <div>
+            <img
+              src={stepIcon2}
+              alt="Room Mngt Icon"
+              style={{ height: "50px", width: "50px" }}
+            />
+            <span> Step 3. Press try on now!</span>
+          </div>
+        </div>
+      </div>
       <Box
         sx={{
           width: "100%",
@@ -175,7 +215,7 @@ const Product = () => {
             border: "5px solid rgb(203, 190, 252)",
           }}
         >
-          <p className="home-card-title">Photo - Yourself</p>
+          <p className="home-card-title">Step 1</p>
           {personImg ? (
             <img src={personImg} alt="Yourself" width="250" height="320" />
           ) : (
@@ -198,7 +238,9 @@ const Product = () => {
               type="file"
               ref={hiddenClothInput}
               style={{ display: "none" }}
-              onChange={(e) => handleImageUpload(e, setPersonImg, setPersonImgName)}
+              onChange={(e) =>
+                handleImageUpload(e, setPersonImg, setPersonImgName)
+              }
             />
           </form>
         </div>
@@ -210,7 +252,7 @@ const Product = () => {
             border: "5px solid rgb(235, 241, 255)",
           }}
         >
-          <p className="home-card-title">Photo - The Clothing Item</p>
+          <p className="home-card-title">Step 2</p>
           {clothingImg ? (
             <img src={clothingImg} alt="Yourself" width="250" height="320" />
           ) : (
@@ -233,7 +275,9 @@ const Product = () => {
               type="file"
               ref={hiddenPhotoInput}
               style={{ display: "none" }}
-              onChange={(e) => handleImageUpload(e, setClothingImg, setclothingImgName)}
+              onChange={(e) =>
+                handleImageUpload(e, setClothingImg, setclothingImgName)
+              }
             />
           </form>
         </div>
@@ -251,7 +295,7 @@ const Product = () => {
           marginTop: "50px",
         }}
       >
-        <i className="animation"></i>Generate<i className="animation"></i>
+        <i className="animation"></i>Try on Now!<i className="animation"></i>
       </button>
       <div
         className="footer"
