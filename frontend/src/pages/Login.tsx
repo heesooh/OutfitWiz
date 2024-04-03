@@ -3,6 +3,7 @@ import CustomizedInput from "../components/shared/CustomizedInput";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loginUser } from "../helpers/api-communicators";
+import { setCookie } from "../helpers/cookie-manager";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ const Login = () => {
       toast.loading("Logging In...", {id: "login"});
       const data = await loginUser(username, password);
       toast.success("Login Success!", {id: "login"});
+      setCookie("auth_cookie", username, password, data.token, 7);
+      // const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1fQ.ug5qHmalKsNCkJQF1PluVmRfHdx0sgx03e7pMX6s2nE";
+      // setCookie("auth_cookie", username, password, testToken, 7);
       navigate("/product");
     } catch (err) {
       console.error(err);
