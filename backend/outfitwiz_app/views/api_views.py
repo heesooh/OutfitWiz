@@ -93,6 +93,8 @@ class SignUpAPIView(View):
         email = request.POST.get('email')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
+        last_name = request.POST.get('last_name')
+        profile_image_base64 = request.POST.get('profile_image')
         # Additional fields
         credit_card_number = request.POST.get('credit_card_number', None)
         svn = request.POST.get('svn', None)
@@ -102,7 +104,7 @@ class SignUpAPIView(View):
         if OutfitWizCustomer.objects.filter(email=email).exists():
             return JsonResponse({'error': 'Email is already used'}, status=400)
 
-        user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+        user = OutfitWizCustomer.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name, profile_image_base64=profile_image_base64)
         token = jwt.encode({'user_id': user.id}, 'secret_key', algorithm='HS256')
         return JsonResponse({'token': token})
 
@@ -115,3 +117,35 @@ class GetSourceImages(View):
             return JsonResponse({'result': result})
         else:
             return JsonResponse({'error': 'Missing source_url parameter'}, status=400)
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class GetUserDataAPIView(View):
+    def post(self, request):
+        # Extract the token from the request
+        token = request.POST.get('token')
+
+        # Decode the token to get the user_id
+        try:
+            decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+            user_id = decoded_token['user_id']
+        except jwt.ExpiredSignatureError:
+            return JsonResponse({'error': 'Token expired'}, status=400)
+        except jwt.InvalidTokenError:
+            return JsonResponse({'error': 'Invalid token'}, status=400)
+        
+        # Retrieve the user object based on the user_id
+        try:
+            user = OutfitWizCustomer.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=400)
+        
+        # Prepare the response data
+        response_data = {
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'profile_image': user.profile_image_base64  # You need to implement this part
+        }
+
+        return JsonResponse({'result': response_data})
