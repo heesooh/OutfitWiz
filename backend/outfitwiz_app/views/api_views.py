@@ -51,6 +51,32 @@ class MakePredictionAPIView(View):
             return response
         else:
             # If photos were not uploaded, re-render the page
+            return HttpResponseRedirect(request.path_info)    
+@method_decorator(csrf_exempt, name='dispatch')
+class MakePredictionCompleteAPIView(View):
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        photo_person_name = data['photo_person_name']
+        photo_clothing_name = data['photo_clothing_name']
+        photo_person_data = data['photo_person']
+        photo_clothing_data = data['photo_clothing']
+
+        #try:
+        #    photo_person = base64.b64decode(photo_person_data)
+        #    photo_clothing = base64.b64decode(photo_clothing_data)
+        #except Exception as e:
+        #    return JsonResponse({'error': 'Invalid Base64 data'})
+        
+        if photo_person_data and photo_clothing_data:
+            photo_prediction_base64 = asyncio.run(MLManager.perform_prediction_complete(photo_person_name, photo_clothing_name, photo_person_data, photo_clothing_data))
+            photo_prediction_dict = {'photo_prediction' : photo_prediction_base64}
+            
+            response = JsonResponse({'result': photo_prediction_dict})
+            response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+            response['Access-Control-Allow-Credentials'] = 'true'
+            return response
+        else:
+            # If photos were not uploaded, re-render the page
             return HttpResponseRedirect(request.path_info)
 
 
