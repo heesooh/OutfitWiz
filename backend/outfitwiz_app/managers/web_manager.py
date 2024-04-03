@@ -9,6 +9,10 @@ class WebManager:
     def perform_webscrape(source_url: str, source_is_local: bool = False):
         # Initialize an empty list to store image data
         images_data = []
+        is_bay = False
+        if "Bay" in source_url:
+            is_bay = True
+
 
         try:
             # Read the HTML content from the source (local file or URL)
@@ -30,6 +34,10 @@ class WebManager:
             for img_tag in img_tags:
                 # Extract image URL and name
                 image_url = img_tag['src']
+                if is_bay:
+                    print("IS BAY")
+                else:
+                    print("NOT BAY")
                 image_name = os.path.basename(image_url)
 
                 # Fetch image content (replace this with your method of fetching image content)
