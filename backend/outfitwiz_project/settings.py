@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'outfitwiz_app'
+    'outfitwiz_app',
+    'corsheaders'
 ]
 
 
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'outfitwiz_project.urls'
@@ -157,3 +159,10 @@ JWT_AUTH = {
 }
 
 AUTH_USER_MODEL = 'outfitwiz_app.OutfitWizCustomer'
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://example.com',
+    'https://example.com',
+]

@@ -58,11 +58,9 @@ class MakePredictionAPIView(View):
             return JsonResponse({'error': 'Invalid Base64 data'})
         
         if photo_person and photo_clothing:
-            photo_prediciton = asyncio.run(MLManager.perform_prediction_new(photo_person_name, photo_clothing_name, photo_person, photo_clothing))
-
-            photo_prediciton_bytes = photo_prediciton.astype(np.uint8).tobytes()
-            photo_prediction_base64 = base64.b64encode(photo_prediciton_bytes).decode('utf-8')
+            photo_prediction_base64 = asyncio.run(MLManager.perform_prediction_new(photo_person_name, photo_clothing_name, photo_person, photo_clothing))
             photo_prediction_dict = {'photo_prediction' : photo_prediction_base64}
+            
             response = JsonResponse({'result': photo_prediction_dict})
             response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
             response['Access-Control-Allow-Credentials'] = 'true'

@@ -2,6 +2,9 @@ from outfitwiz_app.managers.vton_manager import VTONManager
 from outfitwiz_app.managers.cloth_manager import ClothManager
 import os
 import cv2
+from PIL import Image
+import io
+import base64
 
 class MLManager:
 
@@ -34,5 +37,17 @@ class MLManager:
 
         photo_prediction_name = photo_person_name[:-7] + "_" + photo_clothing_name
         photo_prediction_path = os.path.join('outfitwiz_app', 'vton', 'results', 'demo', photo_prediction_name)
-        photo_prediction = cv2.imread(photo_prediction_path)
-        return photo_prediction
+
+        with open(photo_prediction_path, 'rb') as file:
+            binary_data = file.read()
+
+        # Create a buffer with the binary data
+        buffer = io.BytesIO(binary_data)
+        # Open the image using PIL
+        image = Image.open(buffer)
+        # Convert the image to base64
+        base64_data = io.BytesIO()
+        image.save(base64_data, format="JPEG")
+        # Get the binary data from the buffer
+        base64_string = base64.b64encode(base64_data.getvalue()).decode("utf-8")
+        return base64_string
