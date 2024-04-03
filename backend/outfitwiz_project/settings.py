@@ -155,3 +155,5 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': timedelta(days=1),  # Adjust as needed
 }
+
+AUTH_USER_MODEL = 'outfitwiz_app.OutfitWizCustomer'
